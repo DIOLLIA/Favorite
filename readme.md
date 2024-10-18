@@ -7,3 +7,11 @@ BE
 3) Go (Games)
 
 To run the project:
+
+
+install DB
+docker postgres 17.0
+exec
+su - postgres
+psql
+CREATE ROLE fstck_user with login SUPERUSER PASSWORD 'fstck_secret';
