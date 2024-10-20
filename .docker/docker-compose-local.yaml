@@ -1,0 +1,15 @@
+version: '2'
+services:
+  postgres-db:
+    env_file:
+      - .env
+    image: postgres:17.0
+    volumes:
+      - ./fstck-vol:/var/lib/postgresql/data
+      - ./db-check.sql:/docker-entrypoint-initdb.d/db-check.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: fstck-db
