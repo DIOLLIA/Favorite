@@ -24,6 +24,19 @@ destination page will already be loaded in the background
 https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#how-routing-and-navigation-works
 
 
+By default, Next.js applications use React Server Components.
+Fetching data with Server Components is a relatively new approach and there are
+a few benefits of using them:
+Server Components support promises, providing a simpler solution for asynchronous tasks like data fetching. You can use async/await syntax without reaching out for useEffect, useState or data fetching libraries.
+Server Components execute on the server, so you can keep expensive data fetches and logic on the server and only send the result to the client.
+As mentioned before, since Server Components execute on the server, you can query the database directly without an additional API layer.
+It’s time to take a quiz!
+
+Parallel data fetching
+A common way to avoid waterfalls is to initiate all data requests at the same time - in parallel.
+In JavaScript, you can use the Promise.all() or Promise.allSettled() functions to initiate all promises at the same time. For example, in data.ts, we're using Promise.all() in the fetchCardData() function:
+
+
 Шаги для создания бэкапа volume:
 1. Создание бэкапа данных
    Используй следующую команду для создания дампа (бэкапа) данных из PostgreSQL контейнера:

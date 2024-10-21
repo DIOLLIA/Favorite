@@ -3,7 +3,7 @@ import postgres from 'postgres'
 import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 import config from "@/app/seed/config";
 
-const sql = postgres({
+export const sql = postgres({
     host:config.POSTGRES_HOST,
     port: config.POSTGRES_PORT,
     username: config.POSTGRES_USER,
