@@ -60,10 +60,40 @@ Enable PPR for your Next.js app by adding the ppr option to your next.config.mjs
 The great thing about Partial Prerendering is that you don't need to change your code to use it. As long as you're using Suspense 
 to wrap the dynamic parts of your route, Next.js will know which parts of your route are static and which are dynamic.
 
+### Search and pagination
 
+These are the Next.js client hooks that you'll use to implement the search functionality:
 
+useSearchParams - Allows you to access the parameters of the current URL. For example, the search params for this URL
+/dashboard/invoices?page=1&query=pending would look like this: {page: '1', query: 'pending'}.
+URLSearchParams is a Web API that provides utility methods for manipulating the URL query parameters.
 
+usePathname - Lets you read the current URL's pathname. For example, for the route 
+/dashboard/invoices, usePathname would return '/dashboard/invoices'.
 
+useRouter - Enables navigation between routes within client components programmatically. There are
+[multiple methods](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter) you can use.
+
+#### defaultValue vs. value / Controlled vs. Uncontrolled
+
+If you're using state to manage the value of an input, you'd use the value attribute to make it a controlled component.
+This means React would manage the input's state.
+
+However, since you're not using state, you can use defaultValue. This means the native input will manage its own state.
+This is okay since you're saving the search query to the URL instead of state.
+
+#### When to use the useSearchParams() hook vs. the searchParams prop?
+
+You might have noticed you used two different ways to extract search params. Whether you use one or the other depends on whether you're working on the client or the server.
+
+<Search> is a Client Component, so you used the useSearchParams() hook to access the params from the client.
+<Table> is a Server Component that fetches its own data, so you can pass the searchParams prop from the page to the component.
+As a general rule, if you want to read the params from the client, use the useSearchParams() hook as this avoids having to go back to the server.
+
+#### Debouncing
+is a programming practice that limits the rate at which a function can fire. In our case,we need to query the database when the user has stopped typing.
+
+(use-debounce)[https://www.npmjs.com/package/use-debounce]
 
 
 
