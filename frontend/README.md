@@ -36,6 +36,38 @@ Parallel data fetching
 A common way to avoid waterfalls is to initiate all data requests at the same time - in parallel.
 In JavaScript, you can use the Promise.all() or Promise.allSettled() functions to initiate all promises at the same time. For example, in data.ts, we're using Promise.all() in the fetchCardData() function:
 
+By streaming, you can prevent slow data requests from blocking your whole page. This allows the user to see and interact with parts of the page without waiting for all the data to load before any UI can be shown to the user.
+There are two ways you implement streaming in Next.js:
+- At the page level, with the loading.tsx file.
+- For specific components, with <Suspense>.
+  loading.tsx is a special Next.js file built on top of Suspense, it allows you to create fallback UI to show as a replacement while page content loads.
+  Since <SideNav> is static, it's shown immediately. The user can interact with <SideNav> while the dynamic content is loading.
+  The user doesn't have to wait for the page to finish loading before navigating away (this is called interruptable navigation).
+
+
+We can change this with (Route Groups)[https://nextjs.org/docs/app/building-your-application/routing/route-groups]. Create a new folder called /(overview) inside the dashboard folder. Then, move your loading.tsx and page.tsx files inside the folder:
+Route groups allow you to organize files into logical groups without affecting the URL path structure. When you create a new folder using parentheses (), the name won't be included in the URL path. So /dashboard/(overview)/page.tsx becomes /dashboard.
+
+If you remember the slow data request, fetchRevenue(), this is the request that is slowing down the whole page. Instead 
+of blocking your whole page, you can use Suspense to stream only this component and immediately show the rest of the page's UI.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Шаги для создания бэкапа volume:
 1. Создание бэкапа данных
