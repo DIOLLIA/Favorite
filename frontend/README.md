@@ -60,10 +60,9 @@ Enable PPR for your Next.js app by adding the ppr option to your next.config.mjs
 The great thing about Partial Prerendering is that you don't need to change your code to use it. As long as you're using Suspense 
 to wrap the dynamic parts of your route, Next.js will know which parts of your route are static and which are dynamic.
 
-### Search and pagination
+### Search and pagination. Next.js APIs: useSearchParams, usePathname, and useRouter.
 
 These are the Next.js client hooks that you'll use to implement the search functionality:
-
 useSearchParams - Allows you to access the parameters of the current URL. For example, the search params for this URL
 /dashboard/invoices?page=1&query=pending would look like this: {page: '1', query: 'pending'}.
 URLSearchParams is a Web API that provides utility methods for manipulating the URL query parameters.
@@ -93,15 +92,30 @@ As a general rule, if you want to read the params from the client, use the useSe
 #### Debouncing
 is a programming practice that limits the rate at which a function can fire. In our case,we need to query the database when the user has stopped typing.
 
-(use-debounce)[https://www.npmjs.com/package/use-debounce]
+[use-debounce](https://www.npmjs.com/package/use-debounce)
 
+### Next.js with Server Actions
+Server Actions are also deeply integrated with Next.js caching. When a form is submitted through a Server Action,
+not only can you use the action to mutate data, but you can also revalidate the associated cache using APIs like 
+revalidatePath and revalidateTag.
 
+['use server'](https://react.dev/reference/react/use-server) marks server-side functions that can be called from client-side code.
 
+#### Type validation
+To handle type validation we'll use Zod, a TypeScript-first validation library that can simplify this task.
 
+#### Router Cache
 
+Next.js has a [Client-side Router Cache](https://nextjs.org/docs/app/building-your-application/caching#router-cache)
+that stores the route segments in the user's browser for a time.
+Along with [prefetching](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#1-prefetching),
+this cache ensures that users can quickly navigate between routes while reducing the number of requests made to the server.
 
-
-
+#### Dynamic Route Segments
+Next.js allows you to create [Dynamic Route Segments](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes)
+when you don't know the exact segment name and want to create routes based on data. This could be blog post titles,
+product pages, etc. You can create dynamic route segments by wrapping a folder's name in square brackets.
+For example, [id], [post] or [slug].
 
 
 
