@@ -130,7 +130,22 @@ Look how it's done [here](./app/dashboard/invoices/[id]/edit/page.tsx), and impo
 
 NotFound will take precedence over error.tsx. That way it's possible to handle more specific errors!
 
+## Server-side validation
 
+Next.js includes the [eslint-plugin-jsx-a11y](https://www.npmjs.com/package/eslint-plugin-jsx-a11y) plugin in its
+ESLint config to help catch accessibility issues early. 
+
+Add `"lint": "next lint"` to the package.json to have a possibility to run linter via `pnpm lint`.
+
+AT - assistive technologies (client (like `required` for input) and server(custom logic for validation))
+
+'use client' (React) lets you mark what code runs on the client.
+
+`aria-describedby="customer-error"` This establishes a relationship between the select element and the error message container.
+It indicates that the container with id="customer-error" describes the select element.
+Screen readers will read this description when the user interacts with the select box to notify them of errors.
+
+**TODO values drops on create** see the [mark](./app/lib/actions.ts)
 
 Шаги для создания бэкапа volume:
 1. Создание бэкапа данных

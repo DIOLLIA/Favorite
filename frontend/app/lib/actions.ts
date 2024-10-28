@@ -7,25 +7,45 @@ import {redirect} from 'next/navigation';
 
 const FormSchema = z.object({
     id: z.string(),
-    customerId: z.string(),
-    amount: z.coerce.number(),
-    status: z.enum(['pending', 'paid']),
+    customerId: z.string({
+        invalid_type_error: 'Please select a customer.',
+    }),
+    amount: z.coerce.number().gt(0, {message: 'Please enter an amount greater than 0.'}),
+    status: z.enum(['pending', 'paid'], {
+    invalid_type_error: 'Please select an invoice status.'}),
     date: z.string()
 })
+
+export type State = {
+    errors?: {
+        customerId?: string[];
+        amount?: string[];
+        status?: string[];
+    };
+    message?: string | null;
+};
 
 const dashInv = '/dashboard/invoices'
 
 const CreateInvoice = FormSchema.omit({id: true, date: true})
 const UpdateInvoice = FormSchema.omit({id: true, date: true}) // Validating the types with Zod
 
-export async function updateInvoice(id: string, formData: FormData) { // Extracting the data from formData
-    const {customerId, amount, status} = UpdateInvoice.parse({
+export async function updateInvoice(id: string, prevState: State, formData: FormData) { // Extracting the data from formData
+    const validatedFields = UpdateInvoice.safeParse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status')
     });
 
+    if (!validatedFields.success){
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Update Invoice.',
+        };
+    }
+    const {customerId, amount, status} = validatedFields.data
     const amountInCents = amount * 100
+
     try {
         await sql`
             UPDATE invoices
@@ -42,18 +62,24 @@ export async function updateInvoice(id: string, formData: FormData) { // Extract
     revalidatePath(dashInv); // to clear the client cache and make a new server request.
     redirect(dashInv)
 }
-
-export async function createInvoice(formData: FormData) {
+//todo use prevState to save correct values and not drop them (see how it realized in edit when it returns previous value)
+export async function createInvoice(prevState: State, formData: FormData) { //prevState contains the state passed from the useActionState
     // const rawFormData = CreateInvoice.parse({
-    const {customerId, amount, status} = CreateInvoice.parse({
+    const validatedFields = CreateInvoice.safeParse({ //safeParse() will return an object containing either a success or error field. This will help handle validation more gracefully without having put this logic inside the try/catch block.
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status')
     });
+    // If form validation fails, return errors early. Otherwise, continue.
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Create Invoice.',
+        };
+    }
+    const  {customerId, amount, status} = validatedFields.data
     const amountInCents = amount * 100
     const date = new Date().toISOString().split("T")[0]
-    // console.log(rawFormData);
-    console.log(amountInCents, " ", date);
 
     try {
         await sql`
@@ -70,8 +96,6 @@ export async function createInvoice(formData: FormData) {
 }
 
 export async function deleteInvoice(id: string) {
-    throw new Error('Failed to Delete Invoice');
-/*
     try {
     await sql`DELETE
               FROM invoices
@@ -83,5 +107,5 @@ export async function deleteInvoice(id: string) {
         }
     }
     revalidatePath(dashInv)
-    return {message: `invoice ${id} successfully deleted`}*/
+    return {message: `invoice ${id} successfully deleted`}
 }
