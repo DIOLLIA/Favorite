@@ -118,6 +118,19 @@ product pages, etc. You can create dynamic route segments by wrapping a folder's
 For example, [id], [post] or [slug].
 
 
+## Try\catch and handling all errors with error.tsx 
+JavaScript's try/catch statements on Server Actions allows you to handle errors gracefully.
+* "use client" - error.tsx needs to be a Client Component.
+* reset: This is a function to reset the error boundary. When executed, the function will try to re-render the route segment
+* error: This object is an instance of JavaScript's native Error object. \n
+See the [file](./app/dashboard/invoices/error.tsx) to check implementation
+
+#### Handling 404 errors with the notFound function
+Look how it's done [here](./app/dashboard/invoices/[id]/edit/page.tsx), and import { notFound } from 'next/navigation'
+
+NotFound will take precedence over error.tsx. That way it's possible to handle more specific errors!
+
+
 
 Шаги для создания бэкапа volume:
 1. Создание бэкапа данных
