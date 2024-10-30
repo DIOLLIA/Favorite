@@ -1,7 +1,7 @@
 ## Next.js App Router Course - Starter
 
 Stack:
- Next.js
+ Next.js (auth)
  React
  TypeScript
  Tailwind
@@ -146,6 +146,38 @@ It indicates that the container with id="customer-error" describes the select el
 Screen readers will read this description when the user interacts with the select box to notify them of errors.
 
 **TODO values drops on create** see the [mark](./app/lib/actions.ts)
+
+## Authorization and Authentication
+
+Use [next-auth](https://nextjs.authjs.dev/) and add it via pnpm
+
+If Vercel is used, it's need to update environment variables in the Vercel project.
+[This guide](https://vercel.com/docs/projects/environment-variables) explains how to add environment variables on Vercel.
+
+#### Password hashing
+It's good practice to hash passwords before storing them in a database. Hashing converts a password into a 
+fixed-length string of characters, which appears random, providing a layer of security even if the user's data is exposed.
+
+In the seed.js file, package called bcrypt is used to hash the user's password before storing it in the database.
+It will be used to compare that the password entered by the user matches the one in the database.
+However, it's needed to create a separate file for the bcrypt package. 
+This is because bcrypt relies on Node.js APIs not available in Next.js Middleware.
+
+#### Adding the Credentials provider
+The providers option for NextAuth.js  provides an array where the list different login options such as Google or GitHub.
+Here is the [Credentials provider](https://authjs.dev/getting-started/providers/credentials-tutorial) only.
+
+The Credentials provider allows users to log in with a username and a password.
+
+Generally it's recommended to use alternative providers such as 
+* [OAuth](https://authjs.dev/getting-started/providers/oauth-tutorial)
+* [email](https://authjs.dev/getting-started/providers/email-tutorial) providers.
+See the [NextAuth.js docs](https://authjs.dev/getting-started/providers) for a full list of options.
+
+AUTH_SECRET on .env is purposed to enc\dec passwords
+
+
+
 
 Шаги для создания бэкапа volume:
 1. Создание бэкапа данных
