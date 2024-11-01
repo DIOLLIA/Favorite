@@ -176,90 +176,33 @@ See the [NextAuth.js docs](https://authjs.dev/getting-started/providers) for a f
 
 AUTH_SECRET on .env is purposed to enc\dec passwords
 
+## Metadata
+Metadata plays a significant role in enhancing a webpage's SEO, making it more accessible and understandable
+for search engines and social media platforms. Proper metadata helps search engines effectively index webpages,
+improving their ranking in search results. Additionally, metadata like Open Graph improves the appearance
+of shared links on social media, making the content more appealing and informative for users.
 
+e.g. 
+* `<title>Page Title</title>` -  Responsible for the title of a webpage that is displayed on the browser tab.
+* `<meta name="description" content="A brief description of the page content." />` - This metadata provides a brief overview
+of the webpage content and is often displayed in search engine results.
+* `<meta name="keywords" content="keyword1, keyword2, keyword3" />` -  includes the keywords related to the webpage content,
+helping search engines index the page.
+* Open Graph Metadata enhances the way a webpage is represented when shared on social media platforms,
+* providing information such as the title, description, and preview image.
+`<meta property="og:title" content="Title Here" />`
+`<meta property="og:description" content="Description Here" />`
+`<meta property="og:image" content="image_url_here" />`
+* Favicon Metadata links the favicon (a small icon) to the webpage, displayed in the browser's address bar or tab.
+`<link rel="icon" href="path/to/favicon.ico" />`
 
+Next.js has a range of special files that are specifically used for metadata purposes:
 
-Шаги для создания бэкапа volume:
-1. Создание бэкапа данных
-   Используй следующую команду для создания дампа (бэкапа) данных из PostgreSQL контейнера:
+favicon.ico, apple-icon.jpg, and icon.jpg: Utilized for favicons and icons
+opengraph-image.jpg and twitter-image.jpg: Employed for social media images
+robots.txt: Provides instructions for search engine crawling
+sitemap.xml: Offers information about the website's structure
 
-bash
-Copy code
-docker exec -t <container_name> pg_dumpall -c -U <db_user> > /path/to/dump.sql
-Пример:
-
-bash
-Copy code
-docker exec -t postgres-db pg_dumpall -c -U fstck_user > ./backup/dump.sql
-Это создаст SQL файл, содержащий все данные твоей базы данных. Ты сможешь передать этот файл на другой ПК, и затем восстановить данные на другом PostgreSQL инстансе.
-
-2. Перенос данных на другой ПК
-   Для восстановления данных на другой машине:
-
-Запусти новый контейнер PostgreSQL на другой машине.
-
-Скопируй файл dump.sql на новый ПК.
-
-Используй команду для восстановления:
-
-bash
-Copy code
-cat /path/to/dump.sql | docker exec -i <container_name> psql -U <db_user>
-Пример:
-
-bash
-Copy code
-cat ./backup/dump.sql | docker exec -i postgres-db psql -U fstck_user
-3. Копирование всего volume (для переноса файлов)
-   Если тебе нужно перенести все файлы базы данных, а не только SQL дамп, ты можешь использовать команды для копирования volume:
-
-Создать временный контейнер для копирования данных:
-
-Чтобы экспортировать volume, ты можешь запустить временный контейнер, который смонтирует твой volume и скопирует данные:
-
-bash
-Copy code
-docker run --rm -v <volume_name>:/volume -v $(pwd):/backup busybox tar czf /backup/volume_backup.tar.gz -C /volume .
-Пример:
-
-bash
-Copy code
-docker run --rm -v fstck-vol:/volume -v $(pwd):/backup busybox tar czf /backup/volume_backup.tar.gz -C /volume .
-Это создаст файл архива с содержимым volume.
-
-Перенести архив на другой компьютер.
-
-Восстановить volume на другом ПК:
-
-На другом ПК ты можешь создать новый volume и распаковать данные в него:
-
-bash
-Copy code
-docker run --rm -v <volume_name>:/volume -v $(pwd):/backup busybox sh -c "cd /volume && tar xzf /backup/volume_backup.tar.gz"
-Пример:
-
-bash
-Copy code
-docker run --rm -v fstck-vol:/volume -v $(pwd):/backup busybox sh -c "cd /volume && tar xzf /backup/volume_backup.tar.gz"
-Шаги для использования локального volume с возможностью копирования:
-Объяви volume в Docker Compose:
-
-yaml
-Copy code
-version: '2'
-services:
-postgres-db:
-image: postgres:17.0
-volumes:
-- ./fstck-vol:/var/lib/postgresql/data
-ports:
-- "5432:5432"
-environment:
-POSTGRES_USER: fstck_user
-POSTGRES_PASSWORD: fstck_secret
-POSTGRES_DB: fstck-db
-Это создаст директорию fstck-vol рядом с проектом, которую можно просто скопировать на другой компьютер или заархивировать.
-
-Передача и восстановление:
-
-Просто скопируй содержимое директории fstck-vol на другой компьютер, и когда ты запустишь там контейнер с тем же Docker Compose файлом, PostgreSQL будет использовать те же данные.
+#### Inheritance meta
+By include a metadata object from any layout.js or page.js file it will add additional page information
+like title and description. Any metadata in layout.js will be inherited by all pages that use it. (see app/layout.tsx)
