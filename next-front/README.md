@@ -14,4 +14,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 
 ### Mongo DB
-use `docker-compose up -d` to run the database for mems part
+use `docker-compose -f <path_to/db-docker-compose.yml up -d` to run the database for mems part
+
+find volume locally for Docker-desktop:
+v26.1.4: \\wsl$\docker-desktop\mnt\docker-desktop-disk\data\docker\volumes
+

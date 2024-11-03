@@ -1,6 +1,21 @@
-db = db.getSiblingDB('meme_db');
+db = db.getSiblingDB('mem_db');
+
+db.createUser(
+    {
+        user: "mem_user",
+        pwd: "mem_secret",
+        roles: [
+            {
+                role: "readWrite",
+                db: "mem_db"
+            }
+        ]
+    }
+);
 
 db.createCollection('mems_');
+
+
 
 db.mems_.insertMany([
     {
