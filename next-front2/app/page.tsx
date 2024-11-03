@@ -7,52 +7,54 @@ export const metadata: Metadata = {
     title: 'DIOLLIA',
 };
 
+interface MySectionProps {
+    key:string,
+    link:string,
+    header:string,
+    imgSrc:string,
+    alt:string
+}
+
+function MySection({key, link, header, imgSrc, alt}: MySectionProps) {
+    return (
+        <div className="flex flex-col gap-y-80">
+            <Link className="w-full h-full"
+                  key={key}
+                  href={link}
+                  passHref>
+                <div className="w-full h-full relative neon-border">
+                    <p>{header}</p>
+                    <Image src={imgSrc}
+                           alt={alt}
+                           layout="fill"
+                           objectFit="cover"/>
+                </div>
+            </Link>
+        </div>
+    )
+}
+
+const sections = [
+    {key: 'Movie', link: '/movies', header: 'Movie', imgSrc: '/Lebowski.jpg', alt: 'lebowski placeholder'},
+    {key: 'Music', link: '/music', header: 'Music', imgSrc: '/rammstein.jpg', alt: 'rammstein placeholder'},
+    {key: 'Games', link: '/games', header: 'Games', imgSrc: '/gothic.jpg', alt: 'gothic placeholder'},
+]
+
 export default function Home() {
     return (
         <main>
             <div className="grid grid-cols-3 gap-0 h-screen">
-                <div className="flex flex-col gap-y-80 ">
-                    <Link className="w-full h-full"
-                          key={"Movies"}
-                          href={"/movies"}
-                          passHref>
-                        <div className="w-full h-full relative neon-border">
-                            <Image src="/Lebowski.jpg"
-                                   alt="lebowski placeholder"
-                                   layout="fill"
-                                   objectFit="cover"/>
-                            <p>Movies</p>
-                        </div>
-                    </Link>
-                </div>
-                <div className="flex flex-col gap-y-80">
-                    <Link className="w-full h-full"
-                          key={"Music"}
-                          href={"/music"}
-                          passHref>
-                        <div className="w-full h-full relative neon-border">
-                            <p>Music</p>
-                            <Image src="/rammstein.jpg"
-                                   alt="rammstein placeholder"
-                                   layout="fill"
-                                   objectFit="cover"/>
-                        </div>
-                    </Link>
-                </div>
-                <div className="flex flex-col gap-y-80">
-                    <Link className="w-full h-full"
-                          key={"Movies"}
-                          href={"/movies"}
-                          passHref>
-                        <div className="w-full h-full relative neon-border">
-                            <p>Games</p>
-                            <Image src="/gothic.jpg"
-                                   alt="gothic placeholder"
-                                   layout="fill"
-                                   objectFit="cover"/>
-                        </div>
-                    </Link>
-                </div>
+                {
+                    sections.map(({key, link, header, imgSrc, alt}: MySectionProps) =>
+                        <MySection
+                          key={key}
+                          link={link}
+                          header={header}
+                          imgSrc={imgSrc}
+                          alt={alt}
+                        />
+                    )
+                }
             </div>
             <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
                 <a
