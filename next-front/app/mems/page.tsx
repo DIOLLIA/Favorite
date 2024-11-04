@@ -1,13 +1,25 @@
 import Image from "next/image";
 import {Metadata} from "next";
+import {getAllMems} from "@/lib/data";
 
 export const metadata: Metadata = {
-    title: 'Movies',
+    title: 'Mems',
 };
 
 export default async function Home() {
+    const allMems = await getAllMems()
     return (
-        <div><p>You are on Movies page</p>
+        <div><p>You are on Mems page</p>
+            <div>{
+                allMems.map(memCard => (
+                        <div key={memCard.name}>
+                            <p>Name: {memCard.name}</p>
+                            <p>Description: {memCard.description}</p>
+                        </div>
+                    )
+                )
+            }
+            </div>
             <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
                 <a
                     className="flex items-center gap-2 hover:underline hover:underline-offset-4"

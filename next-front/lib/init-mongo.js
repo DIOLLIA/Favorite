@@ -24,7 +24,7 @@ db.mems_.insertMany([
         description: "Popular"
     },
     {
-        name: "Cute duck",
+        name: "Cute_duck",
         image: "mem_duck_1.jpg",
         description: "Kryak"
     }
