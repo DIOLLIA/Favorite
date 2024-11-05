@@ -1,7 +1,6 @@
 import {MemCard, MemModel} from "@/lib/definitions";
 import {mongoClient} from "@/lib/connect";
 
-
 export async function getAllMems(): Promise<MemCard[]> {
    try {
       await mongoClient;
