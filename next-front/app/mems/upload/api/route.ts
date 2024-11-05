@@ -26,8 +26,7 @@ export async function POST(req: Request): Promise<NextResponse> {
         });
         await memCard.save
         return NextResponse.json({message: "Image uploaded successfully"}, {status: 201})
-    } catch (error){
+    } catch (error) {
         return NextResponse.json({error: "An error occured during Image upload. Reason: " + error}, {status: 400})
-
     }
 }
