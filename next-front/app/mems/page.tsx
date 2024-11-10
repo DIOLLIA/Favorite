@@ -15,6 +15,9 @@ export default async function Home() {
                         <div key={memCard.name}>
                             <p>Name: {memCard.name}</p>
                             <p>Description: {memCard.description}</p>
+                            {memCard.image && (
+                                <img src={memCard.image} alt={memCard.name} style={{ maxWidth: '100%', height: 'auto' }} />
+                            )}
                         </div>
                     )
                 )

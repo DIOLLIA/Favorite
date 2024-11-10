@@ -4,52 +4,17 @@ import "@/app/css/uploadImage.css"
 import {UploadForm} from "@/lib/uploadData";
 
 export const metadata: Metadata = {
-    title: 'Upload',
+    title: 'Upload Img',
 };
 
 export default async function Home() {
-    const {
-        name,
-        setName,
-        description,
-        setDescription,
-        setImage,
-        message,
-        handleSubmit,
-    } = UploadForm()
     return (
+        <>
         <div>
-            <form className="image-form" onSubmit={handleSubmit} method="POST" encType="multipart/form-data">
-                <div className="image-form">
-                    <label htmlFor="image">Upload Image</label>
-                    <input id="image"
-                           type="file"
-                           name="image"
-                           onChange={(eventObj) => setImage(eventObj.target.files?.[0] || null)}
-                           required/>
-                </div>
-                <div className="image-form input">
-                    <label htmlFor="name">Name</label>
-                    <input id="name"
-                           type="text"
-                           name="imageName"
-                           value={name}
-                           onChange={(eventObj) => setName(eventObj.target.value)}
-                           required/>
-                </div>
-                <div className="image-form input">
-                    <label htmlFor="description">Description</label>
-                    <input type="text"
-                           id="description"
-                           name="description"
-                           value={description}
-                           onChange={(eventObj) => setDescription(eventObj.target.value)}
-                           required/>
-                </div>
-                <button className="image-form-button" type="submit">Submit</button>
-                {message && <p>{message}</p>}
-            </form>
-
+            <h1>Upload an Image</h1>
+            <UploadForm />
+        </div>
+    );
             <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
                 <a
                     className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -97,7 +62,5 @@ export default async function Home() {
                     Go to nextjs.org →
                 </a>
             </footer>
-        </div>
-    )
-        ;
+        </>);
 }

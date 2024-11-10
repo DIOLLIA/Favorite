@@ -10,7 +10,7 @@ export interface MemCard extends Document {
     description: string;
 }
 
-const memSchema: Schema = new Schema({
+export const memSchema: Schema = new Schema({
     name: { type: String, required: true },
     image: {
         data: Buffer,
