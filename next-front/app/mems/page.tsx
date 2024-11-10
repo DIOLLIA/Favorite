@@ -1,75 +1,27 @@
-import Image from "next/image";
 import {Metadata} from "next";
 import {getAllMems} from "@/lib/data";
-
+import {Card} from "@/app/mems/memCard";
+import footer from "@/app/ui/global/footer";
 export const metadata: Metadata = {
     title: 'Mems',
 };
 
+const footerFit = footer
+//todo make navBar and replace <p>  current page
 export default async function Home() {
     const allMems = await getAllMems()
     return (
         <div><p>You are on Mems page</p>
-            <div>{
-                allMems.map(memCard => (
-                        <div key={memCard.name}>
-                            <p>Name: {memCard.name}</p>
-                            <p>Description: {memCard.description}</p>
-                            {memCard.image && (
-                                <img src={memCard.image} alt={memCard.name} style={{ maxWidth: '100%', height: 'auto' }} />
-                            )}
-                        </div>
-                    )
-                )
-            }
+            <div className="grid-container">
+                {allMems.map((mem) => (
+                    <Card
+                        key={mem.id}
+                        name={mem.name}
+                        description={mem.description}
+                        imgSrc={mem.image}
+                    />
+                ))}
             </div>
-            <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-                <a
-                    className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-                    href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Image
-                        aria-hidden
-                        src="/file.svg"
-                        alt="File icon"
-                        width={16}
-                        height={16}
-                    />
-                    Learn
-                </a>
-                <a
-                    className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-                    href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Image
-                        aria-hidden
-                        src="/window.svg"
-                        alt="Window icon"
-                        width={16}
-                        height={16}
-                    />
-                    Examples
-                </a>
-                <a
-                    className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-                    href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Image
-                        aria-hidden
-                        src="/globe.svg"
-                        alt="Globe icon"
-                        width={16}
-                        height={16}
-                    />
-                    Go to nextjs.org →
-                </a>
-            </footer>
-        </div>
+            ${footerFit()}</div>
     );
 }
