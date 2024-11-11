@@ -36,9 +36,9 @@ function MySection({uniqueId, link, header, imgSrc, alt}: MySectionProps) {
 }
 
 const sections = [
+    {id: 'Games', link: '/games', header: 'Games', imgSrc: '/gothic.jpg', alt: 'gothic placeholder'},
     {id: 'Movie', link: '/movies', header: 'Movie', imgSrc: '/Lebowski.jpg', alt: 'lebowski placeholder'},
     {id: 'Music', link: '/music', header: 'Music', imgSrc: '/rammstein.jpg', alt: 'rammstein placeholder'},
-    {id: 'Games', link: '/games', header: 'Games', imgSrc: '/gothic.jpg', alt: 'gothic placeholder'},
 ]
 
 export default function Home() {
