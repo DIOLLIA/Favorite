@@ -1,9 +1,6 @@
-
- mongo
-
-Stack
-0) FE react + TS, Mongo (mongoose) (Mems)
-    features:
+#### Mems and Front Stack
+React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) 
+* features:
    * hook on external redirect
    * hover with tailwind css
    * upload images to the db
@@ -11,8 +8,11 @@ Stack
    * todo pagination
    * todo search
    * todo auth for admin upload
+
 1) Kotlin ktor SQL_DB (Music)
+
 2) Java Spring  JOOQ, Vaadin (Movies)
+
 3) Go (Games)
 
 To run the project:
