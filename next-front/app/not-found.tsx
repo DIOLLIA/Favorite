@@ -19,9 +19,9 @@ export default function NotFound() {
                    width={"350"}
                    height={"350"}
             />
-            <Link href={"https://www.youtube.com/watch?v=Z3QFODsyUnY"} onClick={handleLinkClick}>
+            <Link href={geraraHereHref} onClick={handleLinkClick}>
             <Image src={"/main/svali2.jpg"}
-                   alt="what are you doing here"
+                   alt="gerara here man!"
                    width={"400"}
                    height={"400"}
             />
