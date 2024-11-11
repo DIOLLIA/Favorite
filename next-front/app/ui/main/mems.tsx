@@ -8,7 +8,7 @@ export default function FloatingCircle() {
     return (
         <Link href="/mems" passHref>
             <div
-                className={`floating-mem-circle ${hovered ? "hovered" : ""}`}
+                className={`base-circle floating-mem-circle ${hovered ? "hovered" : ""}`}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
             >
