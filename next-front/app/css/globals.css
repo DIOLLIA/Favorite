@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #171717;
   --foreground: #171717;
 }
 
@@ -52,8 +52,36 @@ footer {
   width: 100%;
   text-align: center;
   padding: 16px 0;
-  background-color: #f8f9fa;
+  background-color: dimgray;
   display: flex;
   justify-content: center;
   gap: 20px;
+  opacity: 100%
+}
+
+.floating-mem-circle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2
+}
+
+
+.floating-mem-circle.hovered {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.circle-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
 }

@@ -13,15 +13,17 @@ export default async function Home() {
     return (
         <div><p>You are on Mems page</p>
             <div className="grid-container">
-                {allMems.map((mem) => (
-                    <Card
-                        key={mem.id}
-                        name={mem.name}
-                        description={mem.description}
-                        imgSrc={mem.image}
-                    />
-                ))}
+                {allMems.map((mem, index) => {
+                    return (
+                        <Card
+                            key={`${mem.name}-${index}`}
+                            name={mem.name}
+                            description={mem.description}
+                            imgSrc={mem.image}
+                        />
+                    );
+                })}
             </div>
-            ${footerFit()}</div>
+            {footerFit()}</div>
     );
 }

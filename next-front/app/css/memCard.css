@@ -1,12 +1,12 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* cards feeds the page */
-    gap: 16px; /* distance between cards */
-    padding: 16px;
+    gap: 128px; /* distance between cards */
+    padding: 32px;
 }
 
 .card {
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -24,7 +24,7 @@
     height: 200px;
     overflow: hidden;
 }
-
+/*todo fix the error: image ... has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.*/
 .card-content {
     padding: 12px;
     text-align: center;
@@ -41,4 +41,10 @@
     margin: 8px 0 0;
     color: #666;
     font-size: 14px;
+}
+
+.image-fill {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
