@@ -3,6 +3,7 @@ import {Metadata} from "next";
 import Link from "next/link";
 import Footer from "@/app/ui/global/footer";
 import FloatingCircle from "@/app/ui/main/mems";
+import Header from "@/app/ui/global/header";
 
 export const metadata: Metadata = {
     title: 'DIOLLIA',

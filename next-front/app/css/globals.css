@@ -44,6 +44,30 @@ body {
   opacity: 1;
 }
 
+.header-neon-border:hover::after {
+  opacity: 1;
+}
+
+.header-neon-border {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.header-neon-border::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+          inset 0 0 10px rgba(255, 69, 0, 0.8),
+          inset 0 0 20px rgba(255, 140, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 footer {
   position: absolute;
   bottom: 0;

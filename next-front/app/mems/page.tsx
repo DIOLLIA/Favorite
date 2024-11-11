@@ -7,7 +7,6 @@ export const metadata: Metadata = {
     title: 'Mems',
 };
 
-//todo make navBar and replace <p>  current page
 export default async function Home() {
     const allMems = await getAllMems()
     return (

@@ -1,5 +1,7 @@
 import {Metadata} from "next";
 import Footer from "@/app/ui/global/footer";
+import Header from "@/app/ui/global/header";
+import FloatingCircle from "@/app/ui/main/mems";
 
 export const metadata: Metadata = {
     title: 'Music',
@@ -7,7 +9,9 @@ export const metadata: Metadata = {
 
 export default function Home() {
     return (
-        <div><p>You are on Music page</p>
+        <div>
+            <Header/>
+            <FloatingCircle/>
             <Footer/>
         </div>
     );
