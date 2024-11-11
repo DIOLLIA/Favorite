@@ -6,7 +6,7 @@ export default function footer() {
         <div>
             <footer className="footer">
                 <a
-                    className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+                    className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-white"
                     href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -21,7 +21,7 @@ export default function footer() {
                     Learn NextJS
                 </a>
                 <a
-                    className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+                    className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-white"
                     href="https://github.com/DIOLLIA"
                     target="_blank"
                     rel="noopener noreferrer"
