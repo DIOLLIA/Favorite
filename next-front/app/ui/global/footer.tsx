@@ -33,7 +33,7 @@ export default function Footer() {
                         width={24}
                         height={24}
                     />
-                    Go to my gitHub profile →
+                    My GitHub profile
                 </a>
             </footer>
         </div>
