@@ -1,13 +1,12 @@
 import Image from "next/image";
 import {Metadata} from "next";
 import Link from "next/link";
-import footer from "@/app/ui/global/footer";
+import Footer from "@/app/ui/global/footer";
 import FloatingCircle from "@/app/ui/main/mems";
 
 export const metadata: Metadata = {
     title: 'DIOLLIA',
 };
-const footerFit = footer
 
 interface MySectionProps {
     uniqueId: string,
@@ -58,10 +57,8 @@ export default function Home() {
                     )
                 }
             </div>
-            <FloatingCircle />
-            <div>
-                ${footerFit()}
-            </div>
+            <FloatingCircle/>
+            <Footer/>
         </main>
     );
 }

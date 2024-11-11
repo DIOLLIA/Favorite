@@ -1,12 +1,12 @@
 import {Metadata} from "next";
 import {getAllMems} from "@/lib/data";
 import {Card} from "@/app/mems/memCard";
-import footer from "@/app/ui/global/footer";
+import Footer from "@/app/ui/global/footer";
+
 export const metadata: Metadata = {
     title: 'Mems',
 };
 
-const footerFit = footer
 //todo make navBar and replace <p>  current page
 export default async function Home() {
     const allMems = await getAllMems()
@@ -23,7 +23,8 @@ export default async function Home() {
                         />
                     );
                 })}
+                <Footer/>
             </div>
-            {footerFit()}</div>
+        </div>
     );
 }
