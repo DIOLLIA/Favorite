@@ -2,8 +2,7 @@ import Image from "next/image";
 import {Metadata} from "next";
 import Link from "next/link";
 import Footer from "@/app/ui/global/footer";
-import FloatingCircle from "@/app/ui/main/mems";
-import Header from "@/app/ui/global/header";
+import FloatingMemCircle from "@/app/ui/main/mems";
 
 export const metadata: Metadata = {
     title: 'DIOLLIA',
@@ -58,7 +57,7 @@ export default function Home() {
                     )
                 }
             </div>
-            <FloatingCircle/>
+            <FloatingMemCircle/>
             <Footer/>
         </main>
     );

@@ -17,7 +17,8 @@ function NavFooterLinks(props: FooterProps) {
               className={clsx('text-white',
                   {'text-yellow-500': pathname === props.href},
               )}>
-            <div className="w-full h-full relative header-neon-border flex items-center justify-center header-neon-border">
+            <div
+                className="w-full h-full relative header-neon-border flex items-center justify-center header-neon-border">
                 <p className="hidden md:block">{props.name}</p>
             </div>
         </Link>
@@ -35,13 +36,13 @@ export default function Header() {
         <div className="grid grid-cols-3 text-white tracking-wider">
             {
                 headerNavBarLinks.map(link => (
-                        <NavFooterLinks
-                            key={link.name}
-                            uniqueId={link.uniqueId}
-                            name={link.name}
-                            href={link.href}
-                        />
-                        ))}
-                    </div>
-                )
-            }
+                    <NavFooterLinks
+                        key={link.name}
+                        uniqueId={link.uniqueId}
+                        name={link.name}
+                        href={link.href}
+                    />
+                ))}
+        </div>
+    )
+}

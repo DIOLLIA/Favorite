@@ -2,6 +2,7 @@ import {Metadata} from "next";
 import {getAllMems} from "@/lib/data";
 import {Card} from "@/app/mems/memCard";
 import Footer from "@/app/ui/global/footer";
+import GoHome from "@/app/ui/global/goHome";
 
 export const metadata: Metadata = {
     title: 'Mems',
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
 export default async function Home() {
     const allMems = await getAllMems()
     return (
-        <div><p>You are on Mems page</p>
+        <div className="text-white"><p>You are on Mems page</p>
+            <GoHome/>
             <div className="grid-container">
                 {allMems.map((mem, index) => {
                     return (
