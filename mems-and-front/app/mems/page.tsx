@@ -3,6 +3,7 @@ import {getAllMems} from "@/lib/data";
 import {Card} from "@/app/mems/memCard";
 import Footer from "@/app/ui/global/footer";
 import GoHome from "@/app/ui/global/goHome";
+import FooterLogout from "@/app/ui/global/footer-logout";
 
 export const metadata: Metadata = {
     title: 'Mems',
@@ -24,6 +25,7 @@ export default async function Home() {
                         />
                     );
                 })}
+                <FooterLogout/>
                 <Footer/>
             </div>
         </div>
