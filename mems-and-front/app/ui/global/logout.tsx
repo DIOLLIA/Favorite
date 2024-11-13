@@ -5,7 +5,7 @@ export default function LogOut() {
         <form
             action={async () => {
                 'use server';
-                await signOut();
+                await signOut({redirectTo: "/mems"});
             }}
         >
             <button
