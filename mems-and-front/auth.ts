@@ -2,8 +2,6 @@ import NextAuth from 'next-auth';
 import {authConfig} from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import z from 'zod'
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 class User {
     email: string;
@@ -15,7 +13,7 @@ class User {
     }
 }
 
-const admin = new User("admin", "admin")
+const admin = new User("admin@mail.com", "admin123")
 
 async function getUser(email: string): Promise<User | undefined> {
     if (admin.email == email) {
