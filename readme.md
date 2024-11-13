@@ -1,5 +1,5 @@
 #### Mems and Front Stack
-React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) 
+React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
 * features:
    * hook on external redirect
    * hover with tailwind css
@@ -8,6 +8,7 @@ React,  TypeScript, NextJS, Tailwind, Mongo (mongoose)
    * todo pagination
    * todo search
    * todo auth for admin upload
+   * i8n
 
 1) Kotlin ktor SQL_DB (Music)
 

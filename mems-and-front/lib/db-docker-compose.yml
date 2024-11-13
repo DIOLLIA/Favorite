@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mongodb:
+    command:
+      - --storageEngine
+      - wiredTiger
+      - --auth
+    image: mongo:noble
+    container_name: mongomem
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root_admin
+      - MONGO_INITDB_ROOT_PASSWORD=root_secret
+      - MONGO_INITDB_DATABASE=mem_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
+volumes:
+  mongo_data:
+    driver: local
