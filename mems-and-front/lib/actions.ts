@@ -1,12 +1,13 @@
 'use server';
 
-import { signIn } from '@/auth';
+import { signIn } from '@/app/api/auth/auth';
 import { AuthError } from 'next-auth';
 
 export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
 ) {
+    formData.set("redirectTo", "/mems/upload")
     try {
         await signIn('credentials', formData);
     } catch (error) {
