@@ -13,7 +13,7 @@ class User {
     }
 }
 
-const admin = new User("admin@mail.com", "admin123")
+const admin = new User("admin@mail.com", "adminZZz")
 
 async function getUser(email: string): Promise<User | undefined> {
     if (admin.email == email) {
