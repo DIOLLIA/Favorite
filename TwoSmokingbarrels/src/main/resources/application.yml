@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: TwoSmokingBarrels
+  datasource:
+    url: jdbc:postgresql://localhost:5432/my_app_db
+    username: fstck_user
+    password: fstck_secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:sql/movies_init_data.sql

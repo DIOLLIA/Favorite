@@ -1,0 +1,1 @@
+INSERT INTO movies (title, description) VALUES ('TLOTR', 'The lord of the rings');
