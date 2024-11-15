@@ -5,10 +5,10 @@ React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
    * hover with tailwind css
    * upload images to the db
    * navigation links
+   * next-auth for upload mems
    * todo pagination
    * todo search
-   * todo auth for admin upload
-   * i8n
+   * todo i8n
 
 1) Kotlin ktor SQL_DB (Music)
 
