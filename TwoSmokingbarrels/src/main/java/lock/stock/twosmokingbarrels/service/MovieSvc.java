@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public interface MovieSvc {
-    MovieModel getMovie();
+    List<MovieModel> getMovieByWordInTheName();
 
     List<MovieModel> getMovies();
 }
