@@ -1,0 +1,31 @@
+package lock.stock.twosmokingbarrels.service;
+
+import lock.stock.twosmokingbarrels.dao.MovieRepo;
+import lock.stock.twosmokingbarrels.models.MovieModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class MovieImpl implements MovieSvc {
+    private final Transformer movieTransformer;
+    private final MovieRepo movieRepo;
+
+    @Autowired //this annotation could be erased. Here just for clarity
+    public MovieImpl(Transformer movieTransformer, MovieRepo movieRepo) {
+        this.movieTransformer = movieTransformer;
+        this.movieRepo = movieRepo;
+    }
+
+    @Override
+    public List<MovieModel> getMovieByWordInTheName() {
+        return null;
+    }
+
+    @Override
+    public List<MovieModel> getMovies() {
+        return movieRepo.findAllBy().stream()
+                .map(movieTransformer).toList();
+    }
+}
