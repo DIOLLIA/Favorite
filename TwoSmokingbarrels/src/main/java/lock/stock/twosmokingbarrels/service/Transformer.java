@@ -11,6 +11,9 @@ public class Transformer implements Function<MovieEntity, MovieModel> {
 
     @Override
     public MovieModel apply(MovieEntity movieEntity) {
-        return new MovieModel(movieEntity.getTitle(), movieEntity.getDescription());
+        return new MovieModel(
+                movieEntity.getTitle(),
+                movieEntity.getDescription(),
+                movieEntity.getImagePath());
     }
 }
