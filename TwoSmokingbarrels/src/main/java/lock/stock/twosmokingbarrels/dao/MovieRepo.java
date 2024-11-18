@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface MovieRepo extends JpaRepository<MovieEntity, Long> {
     List<MovieEntity> findAllBy();
+    long count();
+
 /* todo to write custom sqls
     @Query("SELECT m FROM MovieEntity m WHERE m.title LIKE %:title% AND m.ageOfProduce > :age")
     List<MovieEntity> findMoviesCustom(@Param("title") String title, @Param("age") int age);*/

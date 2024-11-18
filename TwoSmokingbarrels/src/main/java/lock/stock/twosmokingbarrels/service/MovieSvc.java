@@ -9,4 +9,8 @@ public interface MovieSvc {
     List<MovieModel> getMovieByWordInTheName();
 
     List<MovieModel> getMovies();
+
+    List<MovieModel> getMoviesWithPagination(int limit, int offset);
+
+    long getMoviesCount();
 }

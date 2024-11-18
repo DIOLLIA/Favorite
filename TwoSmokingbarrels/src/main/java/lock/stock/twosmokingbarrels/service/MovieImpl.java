@@ -3,6 +3,8 @@ package lock.stock.twosmokingbarrels.service;
 import lock.stock.twosmokingbarrels.dao.MovieRepo;
 import lock.stock.twosmokingbarrels.models.MovieModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,4 +30,20 @@ public class MovieImpl implements MovieSvc {
         return movieRepo.findAllBy().stream()
                 .map(movieTransformer).toList();
     }
+
+    @Override
+    public List<MovieModel> getMoviesWithPagination(int limit, int offset) {
+
+        Pageable pageable = PageRequest.of(offset, limit);
+        return movieRepo.findAll(pageable).getContent()
+                .stream()
+                .map(movieTransformer)
+                .toList();
+    }
+
+    @Override
+    public long getMoviesCount() {
+        return movieRepo.count();
+    }
+
 }
