@@ -1,13 +1,10 @@
-security with spring-boot (SB)
 
-upload images
+
+
 store images on separate server
-flyway migration scripts
+
 i8s with SB
 GraphQL
 
 
-MAYBE:
-jooq (but now JPA is used)
-vaadin (I have a FE on NextJS)
-login with IDP Github
+

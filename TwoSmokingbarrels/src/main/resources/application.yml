@@ -13,6 +13,7 @@ spring:
     username: fstck_user
     password: fstck_secret
     driver-class-name: org.postgresql.Driver
+
   flyway:
     enabled: true
     locations: classpath:sql/migration
