@@ -33,7 +33,7 @@ public class MovieImpl implements MovieSvc {
 
     @Override
     public List<MovieModel> getMoviesWithPagination(int limit, int offset) {
-
+//todo make one custom request to the DB
         Pageable pageable = PageRequest.of(offset, limit);
         return movieRepo.findAll(pageable).getContent()
                 .stream()

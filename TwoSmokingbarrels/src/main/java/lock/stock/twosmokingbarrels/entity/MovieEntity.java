@@ -12,5 +12,6 @@ public class MovieEntity {
     private Long id;
     private String title;
     private String description;
-    private String imagePath;
+    @Column(name = "relative_image_path")
+    private String relativeImagePath;
 }

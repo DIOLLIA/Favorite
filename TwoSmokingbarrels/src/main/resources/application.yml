@@ -1,6 +1,10 @@
 server:
   port: 8081
 
+app:
+  movies:
+    imageBaseUrl: "http://localhost:8089"
+
 spring:
   application:
     name: TwoSmokingBarrels

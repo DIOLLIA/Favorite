@@ -6,6 +6,6 @@ CREATE TABLE movies (
 );
 
 INSERT INTO movies (title, description, image_path)
-VALUES ('TLOTR', 'The lord of the rings', '/movies/TLOTR.jpg');
+VALUES ('TLOTR', 'The lord of the rings', '/movie_images/TLOTR.jpg');
 INSERT INTO movies (title, description, image_path)
-VALUES ('Full metal jacket', 'private heap, Vietnam and more', '/movies/FullMetalJacket.jpg');
+VALUES ('Full metal jacket', 'private heap, Vietnam and more', '/movie_images/FullMetalJacket.jpg');
