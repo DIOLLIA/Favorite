@@ -1,6 +1,14 @@
 server:
   port: 8081
 
+app:
+  movies:
+    imageBaseUrl: "http://localhost:8089"
+
+logging:
+  level:
+    root: info
+
 spring:
   application:
     name: TwoSmokingBarrels
@@ -10,14 +18,11 @@ spring:
     password: fstck_secret
     driver-class-name: org.postgresql.Driver
 
+  flyway:
+    enabled: true
+    locations: classpath:sql/migration
+
   jpa:
-    hibernate:
-      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  sql:
-    init:
-      mode: never
-      data-locations: classpath:sql/movies_init_data.sql

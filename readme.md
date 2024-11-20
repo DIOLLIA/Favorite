@@ -1,4 +1,4 @@
-#### Mems and Front Stack
+#### Mems and Front Stack and features
 React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
 * features:
    * hook on external redirect
@@ -6,18 +6,41 @@ React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
    * upload images to the db
    * navigation links
    * next-auth for upload mems
-   * todo pagination
-   * todo search
-   * todo i8n
+   * 
+   * todo
+   * exception handling (timeout for svc)
+   * pagination
+   * search
+   * i8n
 
-1) Kotlin ktor SQL_DB (Music)
+#### Music Stack and features 
+Kotlin ktor SQL_DB
 
-2) Java Spring  JOOQ, Vaadin (Movies)
+#### Movies Stack and features
+Java, REST API, Spring, PostgreSQL
+* features:
+   * FlyWay for migration
+   * [Spring JPA](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
+   * Lombok (also logs)
+   * 
+   * todo
+   * scala functions usage
+   * GraphQL
+   * i8n
+   * security SB
+   * MAYBE:
+     * jooq (but now JPA is used)
+     * vaadin (I have a FE on NextJS)
+     * login with IDP Github
 
+#### Games Stack and features
 3) Go (Games)
 
-To run the project:
+4) local http server (node)
+  to share local images via http server
 
+## !INFO BELOW FOR DEVELOPER ONLY!
+To run the project:
 
 install DB
 docker postgres 17.0

@@ -1,0 +1,10 @@
+
+
+
+store images on separate server
+
+i8s with SB
+GraphQL
+
+
+
