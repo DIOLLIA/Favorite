@@ -6,7 +6,9 @@ React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
    * upload images to the db
    * navigation links
    * next-auth for upload mems
+   * 
    * todo
+   * exception handling (timeout for svc)
    * pagination
    * search
    * i8n
@@ -18,9 +20,10 @@ Kotlin ktor SQL_DB
 Java, REST API, Spring, PostgreSQL
 * features:
    * FlyWay for migration
-   * Spring JPA 
+   * [Spring JPA](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
+   * Lombok (also logs)
    * 
-   * todo 
+   * todo
    * scala functions usage
    * GraphQL
    * i8n
