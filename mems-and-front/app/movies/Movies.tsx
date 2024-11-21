@@ -11,7 +11,7 @@ interface MovieResponseItem {
 }
 
 const MOVIE_API_PATH = 'http://localhost:8081/movies'
-export default function GetMovies() {
+export default function MoviesBar() {
     const [data, setData] = useState<MovieResponseItem[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -46,12 +46,14 @@ export default function GetMovies() {
     }
 
     return (
-        <div className="fetch-component">
+        <div className="movie-bar">
+            <div className="movie-bar-container">
             {data.map((item, index) => (
-                <div key={index} className="item">
+                <div key={index}>
                     <p>{item.title}</p>
-                    <p>{item.description}</p>
+                    <>{item.description}</>
                     <Image
+                        className={`movie-bar-item movie-bar-item-${index}`}
                         src={item.imagePath}
                         alt={`Item ${index}`}
                         width={400}
@@ -60,6 +62,7 @@ export default function GetMovies() {
                     />
                 </div>
             ))}
+            </div>
         </div>
     );
 }

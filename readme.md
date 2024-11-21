@@ -34,13 +34,26 @@ Java, REST API, Spring, PostgreSQL
      * login with IDP Github
 
 #### Games Stack and features
-3) Go (Games)
+Go (Games)
 
-4) local http server (node)
+
+#### local http server (node)
   to share local images via http server
 
 ## !INFO BELOW FOR DEVELOPER ONLY!
 To run the project:
+
+run local image server on js:
+`npm run start-server`
+
+run front-end and mems:
+`pnpm dev`
+
+run movies with:
+![img.png](movies_run_config.png)
+
+DBs runs on Docker, separate mongo and postgres
+
 
 install DB
 docker postgres 17.0
