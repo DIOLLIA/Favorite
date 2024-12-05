@@ -24,11 +24,15 @@ Java, REST API, Spring, PostgreSQL
    * Lombok (also logs)
    * 
    * todo
+   * Spring Cache
    * scala functions usage
    * GraphQL
    * i8n
    * security SB
+   * Spring Boot Actuator
+   * Springdoc OpenAPI
    * MAYBE:
+     * Spring Data REST
      * jooq (but now JPA is used)
      * vaadin (I have a FE on NextJS)
      * login with IDP Github

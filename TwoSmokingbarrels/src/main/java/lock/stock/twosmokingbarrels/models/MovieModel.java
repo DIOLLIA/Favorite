@@ -7,3 +7,4 @@ public record MovieModel(String title,
                          String imagePath,
                          Set<TagModel> tags) {
 }
+
