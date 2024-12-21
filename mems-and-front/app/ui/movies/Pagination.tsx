@@ -1,6 +1,6 @@
 'use client';
 
-import {ArrowLeftIcon, ArrowRightIcon} from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 
@@ -8,20 +8,21 @@ export default function Pagination({
                                        limit,
                                        offset,
                                        totalCount,
-                                       pathname
+                                       pathname,
                                    }: {
-    limit: number,
-    offset: number,
-    totalCount: number,
-    pathname: string
+    limit: number;
+    offset: number;
+    totalCount: number;
+    pathname: string;
 }) {
-
     const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = Math.floor(offset / limit) + 1;
+    const currentPage = Math.ceil(offset / limit) + 1;
+
     const createPageURL = (page: number) => {
-        const newOffset = page;
+        const newOffset = page - 1;
         return `${pathname}?limit=${limit}&offset=${newOffset}`;
     };
+
     const generatePages = () => {
         const pages = [];
         for (let i = 1; i <= totalPages; i++) {
@@ -31,6 +32,7 @@ export default function Pagination({
     };
 
     const allPages = generatePages();
+
     return (
         <div className="inline-flex">
             <PaginationArrow
@@ -53,11 +55,12 @@ export default function Pagination({
             <PaginationArrow
                 direction="right"
                 href={createPageURL(currentPage + 1)}
-                isDisabled={currentPage >= totalCount}
+                isDisabled={currentPage >= totalPages}
             />
         </div>
     );
 }
+
 function PaginationNumber({
                               page,
                               href,
@@ -106,7 +109,9 @@ function PaginationArrow({
             <ArrowRightIcon className="w-4" />
         );
 
-    return (
+    return isDisabled ? (
+        <div className={className}>{icon}</div>
+    ) : (
         <Link className={className} href={href}>
             {icon}
         </Link>
