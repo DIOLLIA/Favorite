@@ -27,7 +27,7 @@ function NavFooterLinks(props: FooterProps) {
 
 const headerNavBarLinks = [
     {uniqueId: 'Games', name: 'Games', href: '/games'},
-    {uniqueId: 'Movie', name: 'Movie', href: '/movies'},
+    {uniqueId: 'Movie', name: 'Movie', href: '/movies?limit=3&offset=0'},
     {uniqueId: 'Music', name: 'Music', href: '/music'}
 ]
 
