@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
+import {useSearchParams} from "next/navigation";
 
 export default function Pagination({
                                        limit,
@@ -15,12 +16,17 @@ export default function Pagination({
     totalCount: number;
     pathname: string;
 }) {
+    const searchParams = useSearchParams()
     const totalPages = Math.ceil(totalCount / limit);
     const currentPage = Math.ceil(offset / limit) + 1;
 
     const createPageURL = (page: number) => {
         const newOffset = page - 1;
-        return `${pathname}?limit=${limit}&offset=${newOffset}`;
+        const params = new URLSearchParams({ limit: limit.toString(), offset: newOffset.toString() });
+        if (searchParams.get('lang')) {
+            params.set('lang', searchParams.get('lang')!); // Добавляем текущую локаль
+        }
+        return `${pathname}?${params.toString()}`;
     };
 
     const generatePages = () => {
