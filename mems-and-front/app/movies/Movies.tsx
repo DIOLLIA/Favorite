@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import '@/app/css/movies.css'
 import Pagination from "@/app/ui/movies/Pagination";
 import {usePathname, useSearchParams} from "next/navigation";
+import {useLocale} from "@/app/ui/global/useLocale";
 
 interface MovieResponseItem {
     title: string,
@@ -16,6 +17,7 @@ const MOVIE_API_PATH = '/api/movies'
 export default function MoviesBar() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
+    const lang =useLocale().currentLocale;
 
     const [data, setData] = useState<MovieResponseItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ export default function MoviesBar() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${MOVIE_API_PATH}?limit=${limit}&offset=${offset}&lang=en`,
+                const response = await fetch(`${MOVIE_API_PATH}?limit=${limit}&offset=${offset}&lang=${lang}`,
                     {method: 'GET'})
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -66,7 +68,7 @@ export default function MoviesBar() {
                     <div key={index}>
                         <p>{item.title}</p>
                         <>{item.description}</>
-{                        <Image
+                        {<Image
                             className={`movie-bar-item movie-bar-item-${index}`}
                             src={item.imagePath}
                             alt={`Item ${index}`}
@@ -77,11 +79,13 @@ export default function MoviesBar() {
                     </div>
                 ))}
             </div>
-            <Pagination
-            limit={limit}
-            offset={offset}
-            totalCount={totalCount}
-            pathname={pathname}/>
+            <div className="pagination-container">
+                <Pagination
+                    limit={limit}
+                    offset={offset}
+                    totalCount={totalCount}
+                    pathname={pathname}/>
+            </div>
         </div>
     );
 }
