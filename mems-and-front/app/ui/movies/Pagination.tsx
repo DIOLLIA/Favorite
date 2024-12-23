@@ -76,7 +76,7 @@ function PaginationNumber({
     isActive: boolean;
 }) {
     const numberClass = clsx(
-        'flex h-10 w-10 items-center justify-center',
+        'number',
         {
             'hover:neon-border active-page ': isActive,
             'neon-border': !isActive,

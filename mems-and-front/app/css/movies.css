@@ -93,13 +93,10 @@
 
 /*Pagination arrows and numbers*/
 .arrow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    height: 28px;
     background: gray;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    clip-path: polygon(50% 20%, 0% 100%, 100% 100%);
     border-radius: 8px;
     transition: background 0.3s ease;
     cursor: pointer;
@@ -122,6 +119,16 @@
 
 .arrow-right {
     transform: rotate(90deg);
+}
+
+.number {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Центрируем текст цифры */
+    height: 28px; /* Ставим одинаковую высоту с .arrow */
+    width: 28px;
+    font-size: 14px; /* Размер текста */
+    font-weight: bold; /* Жирный текст для цифр */
 }
 
 .active-page {
