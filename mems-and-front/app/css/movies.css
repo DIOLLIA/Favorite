@@ -1,36 +1,136 @@
-.fetch-component {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-}
-
-.item {
+.movie-bar {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
-    height: 50%;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-    transition: transform 0.2s;
-    text-align: center;
-    padding: 1rem;
+    height: calc(100vh - 100px);
+    padding: 20px;
 }
 
-.item img {
+.movie-bar-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    flex-grow: 1;
+    position: relative;
+}
+
+.movie-card {
+    position: absolute; /* Адаптируем карточки для наложения */
+    height: 400px;
+    width: 600px;
+    border-radius: 8px;
+    background-color: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    box-shadow: -4px 8px 33px 6px rgba(0, 0, 0, 0.35);
+    z-index: 1;
+    opacity: 0.4;
+}
+
+.movie-card-0 {
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    opacity: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.movie-card-1 {
+    left: 25%;
+    bottom: -4%;
+    transform: translateX(-50%);
+    width: 500px;
+    z-index: 1;
+    opacity: 0.4;
+}
+
+.movie-card-2 {
+    left: 75%;
+    bottom: -4%;
+    transform: translateX(-50%);
+    width: 500px;
+    z-index: 1;
+    opacity: 0.4;
+}
+
+.movie-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin-top: auto;
+    margin-bottom: 5px;
+}
+
+.movie-card-description {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.movie-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.movie-image {
-
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: initial;
+    width: 100%;
+    padding: 20px 0;
 }
 
+/*Pagination arrows and numbers*/
+.arrow {
+    width: 28px;
+    height: 28px;
+    background: gray;
+    clip-path: polygon(50% 20%, 0% 100%, 100% 100%);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+.arrow:hover {
+    box-shadow:
+    inset 10px 10px 10px rgba(255, 69, 0, 0.8),
+    inset 15px 15px 20px rgba(255, 140, 0, 0.6);
+}
+
+.arrow-disabled {
+    background: rgba(128, 128, 128, 0.4);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.arrow-left {
+    transform: rotate(-90deg);
+}
+
+.arrow-right {
+    transform: rotate(90deg);
+}
+
+.number {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Центрируем текст цифры */
+    height: 28px; /* Ставим одинаковую высоту с .arrow */
+    width: 28px;
+    font-size: 14px; /* Размер текста */
+    font-weight: bold; /* Жирный текст для цифр */
+}
+
+.active-page {
+    color: #FFD700;
+}

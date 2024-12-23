@@ -24,23 +24,40 @@ Java, REST API, Spring, PostgreSQL
    * Lombok (also logs)
    * 
    * todo
+   * Spring Cache
    * scala functions usage
    * GraphQL
    * i8n
    * security SB
+   * Spring Boot Actuator
+   * Springdoc OpenAPI
    * MAYBE:
+     * Spring Data REST
      * jooq (but now JPA is used)
      * vaadin (I have a FE on NextJS)
      * login with IDP Github
 
 #### Games Stack and features
-3) Go (Games)
+Go (Games)
 
-4) local http server (node)
+
+#### local http server (node)
   to share local images via http server
 
 ## !INFO BELOW FOR DEVELOPER ONLY!
 To run the project:
+
+run local image server on js:
+`npm run start-server`
+
+run front-end and mems:
+`pnpm dev`
+
+run movies with:
+![img.png](movies_run_config.png)
+
+DBs runs on Docker, separate mongo and postgres
+
 
 install DB
 docker postgres 17.0

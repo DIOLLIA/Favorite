@@ -3,6 +3,9 @@
 import Image from 'next/image'
 import {useEffect, useState} from "react";
 import '@/app/css/movies.css'
+import Pagination from "@/app/ui/movies/Pagination";
+import {usePathname, useSearchParams} from "next/navigation";
+import {useLocale} from "@/app/ui/global/useLocale";
 
 interface MovieResponseItem {
     title: string,
@@ -10,20 +13,33 @@ interface MovieResponseItem {
     imagePath: string
 }
 
-const MOVIE_API_PATH = 'http://localhost:8081/movies'
-export default function GetMovies() {
-    const [data, setData] = useState<MovieResponseItem[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+const MOVIE_API_PATH = '/api/movies'
+export default function MoviesBar() {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const lang = useLocale().currentLocale;
+
+    const [data, setData] = useState<MovieResponseItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [totalCount, setTotalCount] = useState(0);
+
+    const limit = Number(searchParams.get('limit')) || 3;
+    const offset = Number(searchParams.get('offset')) || 0;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(MOVIE_API_PATH, {method: 'GET'})
+                const response = await fetch(`${MOVIE_API_PATH}?limit=${limit}&offset=${offset}&lang=${lang}`,
+                    {method: 'GET'})
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                const moviesJson: MovieResponseItem[] = await response.json()
+                const responseJson = await response.json()
+                const moviesJson: MovieResponseItem[] = responseJson.movieModel;
+                const totalCountHeader = response.headers.get('X-Total-Count');
+
+                setTotalCount(Number(totalCountHeader) || 0);
                 setData(moviesJson)
             } catch (error) {
                 setError((error as Error).message);
@@ -32,7 +48,7 @@ export default function GetMovies() {
             }
         }
         fetchData()
-    }, []);
+    }, [limit, offset]);
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -46,20 +62,32 @@ export default function GetMovies() {
     }
 
     return (
-        <div className="fetch-component">
-            {data.map((item, index) => (
-                <div key={index} className="item">
-                    <p>{item.title}</p>
-                    <p>{item.description}</p>
-                    <Image
-                        src={item.imagePath}
-                        alt={`Item ${index}`}
-                        width={400}
-                        height={300}
-                        priority={index === 0}
-                    />
-                </div>
-            ))}
+        <div className="movie-bar">
+            <div className="movie-bar-container">
+                {data.map((item, index) => (
+                    <div key={index} className={`movie-card movie-card-${index}`}>
+                        <Image
+                            className="movie-card-image"
+                            src={item.imagePath}
+                            alt={`Item ${index}`}
+                            width={400}
+                            height={300}
+                            priority={index === 0}
+                        />
+                        <p className="movie-card-tit
+                        le">{item.title}</p>
+                        <p className="movie-card-description">{item.description}</p>
+                    </div>
+                ))}
+            </div>
+            <div className="pagination-container">
+                <Pagination
+                    limit={limit}
+                    offset={offset}
+                    totalCount={totalCount}
+                    pathname={pathname}
+                />
+            </div>
         </div>
     );
 }
