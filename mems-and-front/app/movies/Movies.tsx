@@ -17,7 +17,7 @@ const MOVIE_API_PATH = '/api/movies'
 export default function MoviesBar() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const lang =useLocale().currentLocale;
+    const lang = useLocale().currentLocale;
 
     const [data, setData] = useState<MovieResponseItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -65,17 +65,18 @@ export default function MoviesBar() {
         <div className="movie-bar">
             <div className="movie-bar-container">
                 {data.map((item, index) => (
-                    <div key={index}>
-                        <p>{item.title}</p>
-                        <>{item.description}</>
-                        {<Image
-                            className={`movie-bar-item movie-bar-item-${index}`}
+                    <div key={index} className={`movie-card movie-card-${index}`}>
+                        <Image
+                            className="movie-card-image"
                             src={item.imagePath}
                             alt={`Item ${index}`}
                             width={400}
                             height={300}
                             priority={index === 0}
-                        />}
+                        />
+                        <p className="movie-card-tit
+                        le">{item.title}</p>
+                        <p className="movie-card-description">{item.description}</p>
                     </div>
                 ))}
             </div>
@@ -84,7 +85,8 @@ export default function MoviesBar() {
                     limit={limit}
                     offset={offset}
                     totalCount={totalCount}
-                    pathname={pathname}/>
+                    pathname={pathname}
+                />
             </div>
         </div>
     );

@@ -1,6 +1,5 @@
 'use client';
 
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import {useSearchParams} from "next/navigation";
@@ -24,7 +23,7 @@ export default function Pagination({
         const newOffset = page - 1;
         const params = new URLSearchParams({ limit: limit.toString(), offset: newOffset.toString() });
         if (searchParams.get('lang')) {
-            params.set('lang', searchParams.get('lang')!); // Добавляем текущую локаль
+            params.set('lang', searchParams.get('lang')!);
         }
         return `${pathname}?${params.toString()}`;
     };
@@ -76,16 +75,16 @@ function PaginationNumber({
     href: string;
     isActive: boolean;
 }) {
-    const className = clsx(
-        'flex h-10 w-10 items-center justify-center text-sm border',
+    const numberClass = clsx(
+        'flex h-10 w-10 items-center justify-center',
         {
-            'z-10 bg-blue-600 border-blue-600 text-white': isActive,
-            'hover:bg-gray-100': !isActive,
+            'hover:neon-border active-page ': isActive,
+            'neon-border': !isActive,
         }
     );
 
     return (
-        <Link href={href} className={className}>
+        <Link href={href} className={numberClass}>
             {page}
         </Link>
     );
@@ -100,26 +99,18 @@ function PaginationArrow({
     direction: 'left' | 'right';
     isDisabled?: boolean;
 }) {
-    const className = clsx(
-        'flex h-10 w-10 items-center justify-center rounded-md border',
+    const arrowClass = clsx(
+        'arrow',
         {
-            'pointer-events-none text-gray-300': isDisabled,
-            'hover:bg-gray-100': !isDisabled,
+            'arrow-disabled': isDisabled,
+            'arrow-left': direction === 'left',
+            'arrow-right': direction === 'right',
         }
     );
 
-    const icon =
-        direction === 'left' ? (
-            <ArrowLeftIcon className="w-4" />
-        ) : (
-            <ArrowRightIcon className="w-4" />
-        );
-
     return isDisabled ? (
-        <div className={className}>{icon}</div>
+        <div className={arrowClass} />
     ) : (
-        <Link className={className} href={href}>
-            {icon}
-        </Link>
+        <Link className={arrowClass} href={href} />
     );
 }
