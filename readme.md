@@ -1,3 +1,15 @@
+### FIRST PRIO TODO
+use i8n key\vals in the page
+
+app\movies\Movies.tsx (60:14) @ length
+> 60 |     if (data.length === 0) {
+|              ^
+61 |         return <div>No data found</div>;
+62 |     }
+
+
+
+
 #### Mems and Front Stack and features
 React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
 * features:
@@ -8,6 +20,7 @@ React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
    * next-auth for upload mems
    * 
    * todo
+   * error handling from BE
    * exception handling (timeout for svc)
    * pagination
    * search
