@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
-    const limit = searchParams.get('limit') || '3';
-    const offset = searchParams.get('offset') || '0';
+    const limit = searchParams.get('limit');
+    const offset = searchParams.get('offset');
+    const lang = searchParams.get('lang');
 
-    const response = await fetch(`http://localhost:8081/movies?limit=${limit}&offset=${offset}`, {
+    const response = await fetch(`http://localhost:8081/movies?limit=${limit}&offset=${offset}&lang=${lang}`, {
         method: 'GET',
     });
 

@@ -27,6 +27,8 @@ export default function MoviesBar() {
     const limit = Number(searchParams.get('limit')) || 3;
     const offset = Number(searchParams.get('offset')) || 0;
 
+    const [currentIndex, setCurrentIndex] = useState(0);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -57,15 +59,31 @@ export default function MoviesBar() {
         return <div>Error: {error}</div>;
     }
 
-    if (data.length === 0) {
-        return <div>No data found</div>;
+    const handleCardClick = (index: number) => {
+        if (index !== currentIndex) {
+            setCurrentIndex(index);
+        }
+    };
+    const getCardClass = (index: number)=> {
+        if (data.length === 0) {
+            return <div>No data found</div>;
+        }
+        const total = data.length
+        const position = (index - currentIndex + total) % total; // Calculate relative position
+        if (position === 0) return 'movie-card-0'; // Front
+        if (position === 1) return 'movie-card-1'; // Right
+        if (position === 2) return 'movie-card-2'; // Left
+        return '';
     }
 
     return (
         <div className="movie-bar">
             <div className="movie-bar-container">
                 {data.map((item, index) => (
-                    <div key={index} className={`movie-card movie-card-${index}`}>
+                    <div
+                        key={index}
+                        className={`movie-card ${getCardClass(index)}`}
+                        onClick={() => handleCardClick(index)}>
                         <Image
                             className="movie-card-image"
                             src={item.imagePath}
