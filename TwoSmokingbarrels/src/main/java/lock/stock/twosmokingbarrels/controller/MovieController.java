@@ -19,13 +19,13 @@ import java.util.Map;
 @RestController
 public class MovieController {
 
-    private final MovieSvc movie;
     private final MessageSource messageSource;
+    private final MovieSvc movieSvc;
 
     @Autowired //this annotation could be erased. Here just for clarity
-    public MovieController(MovieSvc movie, MessageSource messageSource) {
-        this.movie = movie;
+    public MovieController(MessageSource messageSource, MovieSvc movieSvc) {
         this.messageSource = messageSource;
+        this.movieSvc = movieSvc;
     }
 
     @GetMapping("/movies")
@@ -34,8 +34,8 @@ public class MovieController {
             @RequestParam(defaultValue = "3") int limit,
             @RequestParam(defaultValue = "en") String lang) {
 
-        List<MovieModel> movies = movie.getMoviesWithPagination(limit, offset);
-        var totalCount = movie.getMoviesCount();
+        List<MovieModel> movies = movieSvc.getMoviesWithPagination(limit, offset);
+        var totalCount = movieSvc.getMoviesCount();
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(totalCount));
 
