@@ -2,10 +2,12 @@ package lock.stock.twosmokingbarrels.service;
 
 import lock.stock.twosmokingbarrels.dao.UserRepo;
 import lock.stock.twosmokingbarrels.entity.UserEntity;
+import lock.stock.twosmokingbarrels.models.UserModel;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,10 +27,8 @@ public class UserService implements UserDetailsService {
         }
         return User.builder()
                 .username(userEntity.getUsername())
-                .password(userEntity.getPassword())
+                .password(new BCryptPasswordEncoder().encode("password"))
                 .roles(userEntity.getRole().toString())
                 .build();
     }
-
-
 }

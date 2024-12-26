@@ -21,5 +21,4 @@ public class UserEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserModel role;
-
 }

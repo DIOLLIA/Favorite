@@ -4,6 +4,7 @@ import lock.stock.twosmokingbarrels.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,19 +13,27 @@ public class UserController {
     private final UserService userSvc;
 
     @Autowired
-    private UserController(UserService userSvc){
+    private UserController(UserService userSvc) {
         this.userSvc = userSvc;
-    };
+    }
+
+    ;
 
     //todo createUser POST mapping
     //todo delete logic with username param usage
-    @GetMapping("movies/login")
-    public ResponseEntity<String> login(@RequestParam String user){
+    @PostMapping("/movies/login")
+    public ResponseEntity<String> login(@RequestParam String username,
+                                        @RequestParam String password) {
 
-        var username = userSvc.loadUserByUsername(user);
-        if (username == null) {
+        var user = userSvc.loadUserByUsername(username);
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok("User found") ;
+        return ResponseEntity.ok("User found");
+    }
+
+    @GetMapping("/movies/login")
+    public ResponseEntity<String> login() {
+        return ResponseEntity.ok("GET STUB");
     }
 }

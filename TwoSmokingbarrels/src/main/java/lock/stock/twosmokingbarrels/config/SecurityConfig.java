@@ -1,5 +1,6 @@
 package lock.stock.twosmokingbarrels.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lock.stock.twosmokingbarrels.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -22,26 +28,34 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.authorizeHttpRequests(
+        return httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(
                         authorize -> {
                             // Permit access to static resources and login, home, and error pages
-                            authorize.requestMatchers("/","/movies/login", "movies").permitAll();
+                            authorize.requestMatchers("/", "/movies/login", "/movies").permitAll();
                             // Restrict access to admin and user pages based on roles
                             authorize.requestMatchers("/movies/upload").hasRole("ADMIN");
                             // All other requests require authentication
-                            authorize.anyRequest().authenticated();
                         }
                 ).formLogin(formLogin -> formLogin
                         .loginPage("/movies/login")  // Custom login page
-                        .defaultSuccessUrl("/", true)  // Redirect to home after successful login
+                        .defaultSuccessUrl("/movies/upload", true)  // Redirect to home after successful login
                         .permitAll())
                 .logout(logout -> logout.logoutUrl("/logout")
                         .logoutSuccessUrl("/movies")  // Redirect to login page after logout todo check how it works
                         .permitAll()
                 )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // Возвращаем 401, если пользователь не авторизован
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Unauthorized");
+                        }))
                 .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF for simplicity (not recommended for production)
                 .build();
     }
+
     @Bean
     public UserDetailsService userDetailService() {
         return userService;
@@ -59,4 +73,19 @@ public class SecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Применить ко всем путям
+        return source;
+    }
 }
+
+
