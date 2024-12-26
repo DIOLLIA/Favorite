@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +42,15 @@ public class MovieController {
 
         var msgs = getMessages(lang, "movie.main.greetings");
         return ResponseEntity.ok().headers(headers).body(new MoviePageModel(movies, msgs));
+    }
+
+    @PostMapping("/movies/upload")
+    public ResponseEntity<MoviePageModel> upload(@RequestParam String title,
+                                                 @RequestParam String description,
+                                                 @RequestParam String tags,
+                                                 @RequestParam String imagePath) {
+        movieSvc.saveMovie(title, description, imagePath, tags);
+        return null;
     }
 
     private Map<String, String> getMessages(String lang, String... keys) {

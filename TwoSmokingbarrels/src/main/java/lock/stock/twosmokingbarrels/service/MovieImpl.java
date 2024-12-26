@@ -15,11 +15,13 @@ import java.util.List;
 public class MovieImpl implements MovieSvc {
     private final Transformer movieTransformer;
     private final MovieRepo movieRepo;
+    private final Transformer transformer;
 
     @Autowired //this annotation could be erased. Here just for clarity
-    public MovieImpl(Transformer movieTransformer, MovieRepo movieRepo) {
+    public MovieImpl(Transformer movieTransformer, MovieRepo movieRepo, Transformer transformer) {
         this.movieTransformer = movieTransformer;
         this.movieRepo = movieRepo;
+        this.transformer = transformer;
     }
 
     @Override
@@ -49,6 +51,12 @@ public class MovieImpl implements MovieSvc {
     @Override
     public long getMoviesCount() {
         return movieRepo.count();
+    }
+
+    @Override
+    public void saveMovie(String title, String description, String imagePath, String tags) {
+        var movie = transformer.createMovie(title, description, imagePath, tags);
+        movieRepo.save(movie);
     }
 
 }

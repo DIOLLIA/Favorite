@@ -33,9 +33,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> {
                             // Permit access to static resources and login, home, and error pages
-                            authorize.requestMatchers("/", "/movies/login", "/movies").permitAll();
+                            authorize.requestMatchers("/", "/movies/login", "/movies", "/movies/upload").permitAll();
                             // Restrict access to admin and user pages based on roles
-                            authorize.requestMatchers("/movies/upload").hasRole("ADMIN");
+//                            authorize.requestMatchers("/movies/upload").hasRole("ADMIN"); todo enable when config done, delete "/movies/upload" from permit
                             // All other requests require authentication
                         }
                 ).formLogin(formLogin -> formLogin
