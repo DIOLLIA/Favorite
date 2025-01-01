@@ -1,12 +1,14 @@
 ### FIRST PRIO TODO
 use i8n key\vals in the page
+delete vaadin
+checkbox with tags on movie's card creation
 
+Add 500 error handling (when DB is disconnected)
 app\movies\Movies.tsx (60:14) @ length
 > 60 |     if (data.length === 0) {
 |              ^
 61 |         return <div>No data found</div>;
 62 |     }
-
 
 
 

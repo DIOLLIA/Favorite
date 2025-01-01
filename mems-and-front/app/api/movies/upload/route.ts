@@ -1,30 +1,38 @@
-import {NextResponse, NextRequest} from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
     try {
+        const formData = await request.formData();
+        const params = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+            params.append(key, value.toString());
+        }
+
         const backendUrl = 'http://localhost:8081/movies/upload';
+
         const response = await fetch(backendUrl, {
-            method: 'GET',
+            method: 'POST',
             headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
                 Cookie: request.headers.get('cookie') || '',
             },
-            redirect: 'manual',
-            credentials: 'include', // Включаем передачу сессионных данных//todo need it? check with SS
+            body: params.toString(),
+            credentials: 'include',
         });
-        console.log('Response URL:', response.url);
 
-        if (response.status === (401)) {
-            const host = request.nextUrl.origin
-            return NextResponse.redirect(host + '/movies/login');
+        if (response.status === 401) { //todo fix with SS
+            const host = request.nextUrl.origin;
+            return NextResponse.redirect(`${host}/movies/login`);
         }
 
         if (response.ok) {
-            return NextResponse.json({authorized: true});
+            return NextResponse.json({ success: true });
         }
 
-        throw new Error(`Unexpected response from backend: ${response.status}`);
+        throw new Error(`Backend responded with status: ${response.status}`);
     } catch (error) {
-        console.error('Error in /movies/upload GET route:', error);
-        return NextResponse.json({error: 'Unable to process request'}, {status: 500});
+        console.error('Error in /api/movies/upload route:', error);
+        return NextResponse.json({ error: 'Unable to process request' }, { status: 500 });
     }
 }

@@ -22,11 +22,11 @@ export default function UploadMovieForm() {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
-        formData.append('image', imagePath);
+        formData.append('imagePath', imagePath);
         formData.append('tags', tags);
 
         try {
-            const response = await fetch('http://localhost:8081/movies/upload', {
+            const response = await fetch('/api/movies/upload', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include', // Для передачи авторизационных данных //todo check with SS

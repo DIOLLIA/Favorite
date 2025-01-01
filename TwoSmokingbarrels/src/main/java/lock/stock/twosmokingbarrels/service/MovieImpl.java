@@ -54,8 +54,8 @@ public class MovieImpl implements MovieSvc {
     }
 
     @Override
-    public void saveMovie(String title, String description, String imagePath, String tags) {
-        var movie = transformer.createMovie(title, description, imagePath, tags);
+    public void saveMovie(String title, String description, String imageName, String tags) {
+        var movie = transformer.createMovie(title, description, imageName, tags);
         movieRepo.save(movie);
     }
 
