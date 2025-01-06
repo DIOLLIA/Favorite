@@ -17,7 +17,7 @@ export default function Pagination({
 }) {
     const searchParams = useSearchParams()
     const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = Math.ceil(offset / limit) + 1;
+    const currentPage = offset  + 1;
 
     const createPageURL = (page: number) => {
         const newOffset = page - 1;

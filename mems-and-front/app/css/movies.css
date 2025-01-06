@@ -138,3 +138,135 @@
 .active-page {
     color: #FFD700;
 }
+
+/*Button for redirect*/
+.redirect-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, red, orange, yellow); /* Градиент пламенной раскраски */
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.redirect-button:hover {
+    transform: scale(1.05); /* Увеличение кнопки при наведении */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.redirect-button:active {
+    transform: scale(0.95); /* Легкое уменьшение при клике */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.back-button {
+    background: gray; /* Цвет кнопки "Back" */
+    color: white; /* Белый текст */
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.back-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Login form*/
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: gray;
+}
+
+.login-form h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-form label {
+    margin: 10px 0 5px;
+}
+
+.login-form input {
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: black;
+}
+
+.login-form button {
+    padding: 10px;
+    background: linear-gradient(45deg, red, orange, red);
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background: radial-gradient(red, darkorange, lightyellow); /* Градиент пламенной раскраски */
+}
+
+.login-form .error {
+    color: wheat;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Upload form*/
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: gray;
+}
+
+.upload-form h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.upload-form label {
+    margin: 10px 0 5px;
+}
+
+.upload-form input,
+.upload-form textarea {
+    color: black;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.upload-form button {
+    padding: 10px;
+    background: linear-gradient(45deg, red, orange, red);;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.upload-form button:hover {
+    background: radial-gradient(red, darkorange, lightyellow);
+}

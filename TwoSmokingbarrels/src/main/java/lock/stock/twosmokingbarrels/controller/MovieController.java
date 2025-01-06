@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,13 +20,13 @@ import java.util.Map;
 @RestController
 public class MovieController {
 
-    private final MovieSvc movie;
     private final MessageSource messageSource;
+    private final MovieSvc movieSvc;
 
     @Autowired //this annotation could be erased. Here just for clarity
-    public MovieController(MovieSvc movie, MessageSource messageSource) {
-        this.movie = movie;
+    public MovieController(MessageSource messageSource, MovieSvc movieSvc) {
         this.messageSource = messageSource;
+        this.movieSvc = movieSvc;
     }
 
     @GetMapping("/movies")
@@ -34,13 +35,22 @@ public class MovieController {
             @RequestParam(defaultValue = "3") int limit,
             @RequestParam(defaultValue = "en") String lang) {
 
-        List<MovieModel> movies = movie.getMoviesWithPagination(limit, offset);
-        var totalCount = movie.getMoviesCount();
+        List<MovieModel> movies = movieSvc.getMoviesWithPagination(limit, offset);
+        var totalCount = movieSvc.getMoviesCount();
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(totalCount));
 
         var msgs = getMessages(lang, "movie.main.greetings");
         return ResponseEntity.ok().headers(headers).body(new MoviePageModel(movies, msgs));
+    }
+
+    @PostMapping("/movies/upload")
+    public ResponseEntity<MoviePageModel> upload(@RequestParam String title,
+                                                 @RequestParam String description,
+                                                 @RequestParam String tags,
+                                                 @RequestParam String imagePath) {
+        movieSvc.saveMovie(title, description, imagePath, tags);
+        return null;
     }
 
     private Map<String, String> getMessages(String lang, String... keys) {
