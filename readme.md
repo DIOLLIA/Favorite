@@ -10,23 +10,25 @@ app\movies\Movies.tsx (60:14) @ length
 61 |         return <div>No data found</div>;
 62 |     }
 
-
+на последней странице отображается неверная текущая страница (подвсветка)
+неверные редирект стрелки
+http://localhost:3000/movies?limit=3&offset=2&lang=en
+![img.png](img.png)
 
 #### Mems and Front Stack and features
 React,  TypeScript, NextJS, Tailwind, Mongo (mongoose) , zod (server validation)
 * features:
    * hook on external redirect
-   * hover with tailwind css
    * upload images to the db
    * navigation links
    * next-auth for upload mems
+   * pagination
    * 
    * todo
    * error handling from BE
    * exception handling (timeout for svc)
-   * pagination
    * search
-   * i8n
+   * i8n (partially done)
 
 #### Music Stack and features 
 Kotlin ktor SQL_DB
@@ -36,13 +38,13 @@ Java, REST API, Spring, PostgreSQL
 * features:
    * FlyWay for migration
    * [Spring JPA](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
-   * Lombok (also logs)
+   * Lombok
+   * I18n
    * 
    * todo
    * Spring Cache
    * scala functions usage
    * GraphQL
-   * i8n
    * security SB
    * Spring Boot Actuator
    * Springdoc OpenAPI
