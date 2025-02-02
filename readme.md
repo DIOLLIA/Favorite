@@ -1,4 +1,6 @@
 ### FIRST PRIO TODO
+feature/error_handling check feature is ok from its branch
+
 use i8n key\vals in the page
 delete vaadin
 checkbox with tags on movie's card creation
