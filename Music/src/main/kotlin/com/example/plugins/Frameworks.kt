@@ -1,19 +1,20 @@
 package com.example.plugins
 
+import com.example.config.*
 import io.ktor.server.application.*
-import org.koin.dsl.module
+import org.flywaydb.core.Flyway
+import org.koin.ktor.ext.getKoin
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
+
 fun Application.configureFrameworks() {
+    println("Load db modules")
     install(Koin) {
         slf4jLogger()
-        modules(module {
-            single<HelloService> {
-                HelloService {
-                    println(environment.log.info("Hello, World!"))
-                }
-            }
-        })
+        modules(databaseModule(dbConfig()), flywayModule)
     }
+
+    getKoin().get<Flyway>()
 }
+
