@@ -13,8 +13,8 @@ fun Application.configureSerialization() {
     }
     routing {
         get("/json") {
-                call.respond(getOneBand())
-            }
+            call.respond(getOneBand())
+        }
     }
 }
 

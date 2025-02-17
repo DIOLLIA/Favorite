@@ -8,8 +8,7 @@ import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
 
-fun Application.configureFrameworks() {
-    println("Load db modules")
+fun Application.configureDatabase() {
     install(Koin) {
         slf4jLogger()
         modules(databaseModule(dbConfig()), flywayModule)

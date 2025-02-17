@@ -44,7 +44,6 @@ fun databaseModule(dbConfig: DbConfig) = module {
 val flywayModule = module { // single initialize by request, to invoke it we use flyway.migrate()
     single {
         val config = get<DbConfig>()
-        println("INIT flyway module")
         val flyway = Flyway.configure()
             .dataSource(config.url, config.user, config.password)
             .locations("classpath:db/migration")
