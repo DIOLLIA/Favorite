@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.model.Band
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -11,8 +12,10 @@ fun Application.configureSerialization() {
         json()
     }
     routing {
-        get("/json/kotlinx-serialization") {
-                call.respond(mapOf("hello" to "world"))
+        get("/json") {
+                call.respond(getOneBand())
             }
     }
 }
+
+fun getOneBand(): Band = Band(bandName = "Rammstein", description = "Heavy metal aus Deutschland", imagePath = "tbd")
