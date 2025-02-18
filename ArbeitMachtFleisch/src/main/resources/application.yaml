@@ -1,0 +1,18 @@
+ktor:
+    application:
+        modules:
+            - com.example.ApplicationKt.module
+    deployment:
+        port: 8083
+
+database:
+    driver: org.postgresql.Driver
+    url: "jdbc:postgresql://localhost:5432/music"
+    user: fstck_user
+    password: fstck_secret
+    maxPoolSize: 4
+
+flyway:
+  verbose: true
+  enabled: true
+  locations: "classpath:db/migration"
