@@ -1,4 +1,4 @@
-package com.example.config
+package fleisch.lab.config
 
 
 import com.zaxxer.hikari.HikariConfig

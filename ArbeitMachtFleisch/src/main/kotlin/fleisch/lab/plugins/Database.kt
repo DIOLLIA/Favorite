@@ -1,6 +1,7 @@
-package com.example.plugins
+package fleisch.lab.plugins
 
-import com.example.config.*
+import fleisch.lab.config.databaseModule
+import fleisch.lab.config.dbConfig
 import io.ktor.server.application.*
 import org.flywaydb.core.Flyway
 import org.koin.ktor.ext.getKoin
@@ -11,7 +12,7 @@ import org.koin.logger.slf4jLogger
 fun Application.configureDatabase() {
     install(Koin) {
         slf4jLogger()
-        modules(databaseModule(dbConfig()), flywayModule)
+        modules(databaseModule(dbConfig()), fleisch.lab.config.flywayModule)
     }
 
     getKoin().get<Flyway>()

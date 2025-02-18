@@ -1,6 +1,6 @@
-package com.example.plugins
+package fleisch.lab.plugins
 
-import com.example.model.Band
+import fleisch.lab.model.Band
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -11,11 +11,4 @@ fun Application.configureSerialization() {
     install(ContentNegotiation) {
         json()
     }
-    routing {
-        get("/json") {
-            call.respond(getOneBand())
-        }
-    }
 }
-
-fun getOneBand(): Band = Band(bandName = "Rammstein", description = "Heavy metal aus Deutschland", imagePath = "tbd")
