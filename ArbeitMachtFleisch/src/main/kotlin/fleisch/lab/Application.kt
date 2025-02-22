@@ -1,6 +1,9 @@
-package com.example
+package fleisch.lab
 
-import com.example.plugins.*
+import fleisch.lab.plugins.configureDatabase
+import fleisch.lab.plugins.configureRouting
+import fleisch.lab.plugins.configureSecurity
+import fleisch.lab.plugins.configureSerialization
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -10,7 +13,6 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureDatabase()
     configureSerialization()
-    configureDatabases()
     configureSecurity()
     configureRouting()
 }
