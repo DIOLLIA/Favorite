@@ -1,7 +1,6 @@
 package fleisch.lab
 
 import fleisch.lab.plugins.configureDatabase
-import fleisch.lab.plugins.configureDatabases
 import fleisch.lab.plugins.configureRouting
 import fleisch.lab.plugins.configureSecurity
 import fleisch.lab.plugins.configureSerialization
@@ -14,7 +13,6 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureDatabase()
     configureSerialization()
-//    configureDatabases()
     configureSecurity()
     configureRouting()
 }
