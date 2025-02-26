@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.sql.Statement
 
 @Serializable
 class BandService(private val connection: Connection) {
@@ -16,18 +17,12 @@ class BandService(private val connection: Connection) {
         private const val DELETE_BAND = "DELETE FROM bands WHERE id = ?"
     }
 
-//    init {
-//        val statement = connection.createStatement()
-//        statement.executeUpdate(CREATE_TABLE_BANDS)
-//    }
-
-//    private var newBandId = 0
-
     // Create new Band
-    /*    suspend fun create(Band: Band): Int = withContext(Dispatchers.IO) {
-            val statement = connection.prepareStatement(INSERT_Band, Statement.RETURN_GENERATED_KEYS)
-            statement.setString(1, Band.name)
-            statement.setInt(2, Band.population)
+      suspend fun create(band: Band): Int = withContext(Dispatchers.IO) {
+            val statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
+            statement.setString(1, band.bandName)
+            statement.setString(2, band.description)
+            statement.setString(3, band.imagePath)
             statement.executeUpdate()
 
             val generatedKeys = statement.generatedKeys
@@ -36,7 +31,7 @@ class BandService(private val connection: Connection) {
             } else {
                 throw Exception("Unable to retrieve the id of the newly inserted Band")
             }
-        }*/
+        }
 
     // Read a Band
     /*    suspend fun read(id: Int): Band = withContext(Dispatchers.IO) {
