@@ -1,3 +1,9 @@
+## Multi stack app
+  My project to work with different things to display some interesting data
+###  Diagram of communications
+![Stack_diagram.png](Stack_diagram.png)
+
+
 ### FIRST PRIO TODO
 feature/error_handling check feature is ok from its branch
 
