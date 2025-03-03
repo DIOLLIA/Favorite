@@ -1,10 +1,17 @@
 package fleisch.lab.plugins
 
 import com.example.plugins.BandService
+import fleisch.lab.model.Band
+import fleisch.lab.model.getMockedBandData
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
@@ -25,5 +32,39 @@ fun Application.configureRouting() {
             call.respond(bandService.create(call.receive()))
         }
     }
+    routing {
+        get("/coroutbands") {
+            var bands: Set<Band> = setOf()
+            val bandJob = GlobalScope.launch {
+                delay(1000L)
+                bands = bandService.read()
+            }
+            val otherData = mainCoroutine()
+
+            bandJob.join()
+            call.respond(BandResponse(bands, otherData))
+        }
+    }
 }
+
+@Serializable
+data class BandResponse private constructor(
+    val bands: Set<Band>
+) {
+    constructor(bands: Set<Band>, descriptions: Map<String, String>) : this(
+        bands.map { band ->
+            descriptions[band.bandName]?.let { newDescription ->
+                band.copy(description = newDescription)
+            } ?: band // if not band found - leave initial band
+        }.toSet()
+    )
+}
+
+fun mainCoroutine(): Map<String, String> = runBlocking {
+    GlobalScope.launch {
+        delay(3000L)
+    }
+    return@runBlocking getMockedBandData()
+}
+
 
