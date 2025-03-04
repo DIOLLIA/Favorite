@@ -1,15 +1,22 @@
 ktor:
-    application:
-        modules:
-            - fleisch.lab.ApplicationKt.module
-    deployment:
-        port: 8083
+  application:
+    modules:
+      - fleisch.lab.ApplicationKt.module
+  deployment:
+    port: 8083
 
 database:
+  postgres:
     driver: org.postgresql.Driver
     url: "jdbc:postgresql://localhost:5432/music"
     user: fstck_user
     password: fstck_secret
+    maxPoolSize: 4
+  mongo:
+    url: "mongodb://localhost:27017"
+    dbName: "mem_db"
+    user: mem_user
+    password: mem_secret
     maxPoolSize: 4
 
 flyway:

@@ -1,6 +1,6 @@
 package com.example
 
-import fleisch.lab.plugins.configureRouting
+import fleisch.lab.routing.configureRouting
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*

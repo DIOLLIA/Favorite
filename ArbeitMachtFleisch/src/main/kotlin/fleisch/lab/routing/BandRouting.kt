@@ -1,8 +1,9 @@
-package fleisch.lab.plugins
+package fleisch.lab.routing
 
 import com.example.plugins.BandService
 import fleisch.lab.model.Band
 import fleisch.lab.model.getMockedBandData
+import fleisch.lab.plugins.MongoService
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -12,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import org.koin.java.KoinJavaComponent.getKoin
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
@@ -40,11 +42,16 @@ fun Application.configureRouting() {
                 bands = bandService.read()
             }
             val otherData = mainCoroutine()
-
+            invokePing()
             bandJob.join()
             call.respond(BandResponse(bands, otherData))
         }
     }
+}
+
+suspend fun invokePing() {
+    val mongoService: MongoService = getKoin().get()
+    mongoService.ping()
 }
 
 @Serializable

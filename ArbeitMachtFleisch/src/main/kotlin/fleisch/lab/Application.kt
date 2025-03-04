@@ -1,9 +1,9 @@
 package fleisch.lab
 
-import fleisch.lab.plugins.configureDatabase
-import fleisch.lab.plugins.configureRouting
+import fleisch.lab.plugins.configureDbs
 import fleisch.lab.plugins.configureSecurity
 import fleisch.lab.plugins.configureSerialization
+import fleisch.lab.routing.configureRouting
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-    configureDatabase()
+    configureDbs()
     configureSerialization()
     configureSecurity()
     configureRouting()

@@ -3,6 +3,7 @@ val h2_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val postgres_version: String by project
+val ktor_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -25,8 +26,9 @@ repositories {
 }
 
 dependencies {
-    implementation("io.insert-koin:koin-ktor:3.5.6")
-    implementation("io.insert-koin:koin-logger-slf4j:3.5.6")
+    implementation("io.insert-koin:koin-ktor:$ktor_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.7.3")
+    implementation("io.insert-koin:koin-logger-slf4j:$ktor_version")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
@@ -37,6 +39,9 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("org.flywaydb:flyway-core:9.22.3")
     implementation("com.zaxxer:HikariCP:5.0.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
