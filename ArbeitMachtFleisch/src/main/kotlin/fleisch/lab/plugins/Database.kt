@@ -1,8 +1,11 @@
 package fleisch.lab.plugins
 
 import com.example.plugins.BandService
-import fleisch.lab.config.databaseModule
-import fleisch.lab.config.dbConfig
+import com.mongodb.reactivestreams.client.MongoDatabase
+import fleisch.lab.config.connectToPostgres
+import fleisch.lab.config.flywayModule
+import fleisch.lab.config.postgresConfig
+import fleisch.lab.config.postgresDbModule
 import io.ktor.server.application.*
 import org.flywaydb.core.Flyway
 import org.koin.dsl.module
@@ -10,30 +13,27 @@ import org.koin.ktor.ext.getKoin
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import java.sql.Connection
-import java.sql.DriverManager
 
-val databaseBandModule = module {
-    single { get<Application>().connectToPostgres() }
+val dbBandConnection = module {
+    single { connectToPostgres(dbConfig = get<Application>().postgresConfig()) }
     single { BandService(get<Connection>()) }
 }
 
-fun Application.configureDatabase() {
+val mongoServiceConnection = module {
+    single { MongoService(get<MongoDatabase>()) }
+}
+
+fun Application.configureDbs() {
     install(Koin) {
         slf4jLogger()
         modules(
-            module { single { this@configureDatabase } },
-            databaseModule(dbConfig()), fleisch.lab.config.flywayModule, databaseBandModule
+            module { single { this@configureDbs } }, // зачем данный модуль? что означает this@configureDbs
+            postgresDbModule(postgresConfig()),
+            flywayModule,
+            dbBandConnection,
+            mongoDbModule(this@configureDbs), //что означает this@configureDbs
+            mongoServiceConnection
         )
     }
-
     getKoin().get<Flyway>()
-}
-
-fun Application.connectToPostgres(): Connection {
-    Class.forName("org.postgresql.Driver")
-    val url = environment.config.property("database.url").getString()
-    val user = environment.config.property("database.user").getString()
-    val password = environment.config.property("database.password").getString()
-
-    return DriverManager.getConnection(url, user, password)
 }
