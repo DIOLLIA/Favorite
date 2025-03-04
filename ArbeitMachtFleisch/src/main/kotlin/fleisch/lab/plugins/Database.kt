@@ -35,6 +35,5 @@ fun Application.configureDbs() {
             mongoServiceConnection
         )
     }
-    getKoin().get<MongoDatabase>()
     getKoin().get<Flyway>()
 }

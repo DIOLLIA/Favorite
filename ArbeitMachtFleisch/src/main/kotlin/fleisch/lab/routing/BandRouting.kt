@@ -18,6 +18,7 @@ import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
     val bandService: BandService by inject()
+    val mongoService: MongoService by inject()
     routing {
         get("/") {
             call.respondText("You are on the music REST API!")
@@ -45,6 +46,11 @@ fun Application.configureRouting() {
             invokePing()
             bandJob.join()
             call.respond(BandResponse(bands, otherData))
+        }
+    }
+    routing {
+        get("/mems") {
+            call.respond(mongoService.getAllMems())
         }
     }
 }

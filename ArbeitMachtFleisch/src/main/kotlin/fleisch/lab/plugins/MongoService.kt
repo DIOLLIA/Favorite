@@ -4,6 +4,7 @@ import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import com.mongodb.reactivestreams.client.MongoDatabase
 import io.ktor.server.application.*
+import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.bson.BsonInt64
 import org.bson.Document
@@ -13,8 +14,13 @@ import org.slf4j.LoggerFactory
 
 fun mongoDbModule(app: Application) = module {
     val envConfig = app.environment.config
+    val url = envConfig.property("database.mongo.url").getString()
+    val user = envConfig.property("database.mongo.user").getString()
+    val password = envConfig.property("database.mongo.password").getString()
+    val dsn = "mongodb://$user:$password@$url/?authSource=mem_db"
+
     single {
-        MongoClients.create(envConfig.property("database.mongo.url").getString())
+        MongoClients.create(dsn)
     }
     single {
         val mongoClient = get<MongoClient>()
@@ -30,4 +36,9 @@ class MongoService(private val database: MongoDatabase) {
             ?: throw Exception("Error during establishing mongo connection")
         log.info("MongoDB connection established")
     }
+
+    suspend fun getAllMems(): String {
+        return database.getCollection("mems_").find().first().awaitFirst().toJson()
+    }
 }
+

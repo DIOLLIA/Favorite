@@ -13,11 +13,10 @@ database:
     password: fstck_secret
     maxPoolSize: 4
   mongo:
-    url: "mongodb://localhost:27017"
+    url: "localhost:27017"
     dbName: "mem_db"
     user: mem_user
     password: mem_secret
-    maxPoolSize: 4
 
 flyway:
   verbose: true
