@@ -38,6 +38,9 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("org.flywaydb:flyway-core:9.22.3")
+    implementation ("org.liquibase:liquibase-core:4.31.1")
+    implementation("org.liquibase.ext:liquibase-mongodb:4.23.0")
+
     implementation("com.zaxxer:HikariCP:5.0.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")

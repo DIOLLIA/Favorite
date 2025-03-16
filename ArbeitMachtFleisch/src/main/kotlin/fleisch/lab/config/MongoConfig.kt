@@ -1,13 +1,28 @@
 package fleisch.lab.config
 
-import io.ktor.server.application.*
+import liquibase.Liquibase
+import liquibase.database.Database
+import liquibase.database.DatabaseFactory
+import liquibase.ext.mongodb.database.MongoLiquibaseDatabase
+import liquibase.resource.ClassLoaderResourceAccessor
 
-fun Application.mongoConfig(): DbConfig {
-    return DbConfig(
-        url = environment.config.property("database.mongo.url").getString(),
-        user = environment.config.property("database.mongo.user").getString(),
-        password = environment.config.property("database.mongo.password").getString(),
-        driver = "",
-        maxPoolSize = 0,
-    )
+class MongoLiquibaseService {
+
+    fun runMigrations() {
+//          val props = TODO() // take DB data from properties
+
+        val mongoDatabase: Database = MongoLiquibaseDatabase().apply {
+            connection = DatabaseFactory.getInstance()
+                .openConnection(
+                    "mongodb://bands_user:bands_secret@localhost:27017/bands",
+                    null, null, null,
+                    ClassLoaderResourceAccessor()
+                )
+        }
+
+        Liquibase("mongo/migration/01_init_band_data.yml", ClassLoaderResourceAccessor(), mongoDatabase).use { liquibase ->
+            liquibase.update("")
+        }
+
+    }
 }

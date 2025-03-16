@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: fleischLab
+      changes:
+        - createCollection:
+            collectionName: bands_data
+  - changeSet:
+      id: 2
+      author: fleischLab
+      changes:
+        - insertOne:
+            collectionName: bands_data
+            document: |
+              { 
+              "band_name": "rammstein",
+              "band_data": "data from mongoDB"
+              }
+  - changeSet:
+      id: 3
+      author: fleischLab
+      changes:
+        - runCommand:
+            command: |
+              {
+                update: "bands_data",
+                updates: [
+                  {
+                    q: { "band_data": { "$exists": true } },
+                    u: {
+                      $set: {
+                        band_description_en: "",
+                        band_description_de: ""
+                      },
+                      $unset: {
+                        band_data: ""
+                      }
+                    },
+                    multi: true
+                  }
+                ]
+              }
+# Instead, instead set\unset it's possible to use $rename to rename the field and then add new fields with empty values.
+#see readme.txt for more detailsq`
