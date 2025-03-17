@@ -2,6 +2,7 @@ package fleisch.lab.routing
 
 import com.example.plugins.BandService
 import fleisch.lab.model.Band
+import fleisch.lab.model.BandDescription
 import fleisch.lab.model.getMockedBandData
 import fleisch.lab.plugins.MongoService
 import io.ktor.server.application.*
@@ -49,8 +50,15 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        get("/mems") {
-            call.respond(mongoService.getAllMems())
+        get("/bands/descs") {
+            call.respond(mongoService.getAllBandsDescs())
+        }
+    }
+    routing {
+// curl -X POST -H 'Content-Type: application/json' -d '{"bandName":"sepultura","bandDescription":{"EN":"eng sep mong description"}}' http://localhost:8083/bands/description/add
+        post("/bands/description/add") {
+            val bandDescription = call.receive<BandDescription>()
+            call.respond(mongoService.addBandDescription(bandDescription))
         }
     }
 }
@@ -68,10 +76,11 @@ data class BandResponse private constructor(
         bands.map { band ->
             descriptions[band.bandName]?.let { newDescription ->
                 band.copy(description = newDescription)
-            } ?: band // if not band found - leave initial band
+            } ?: band // if not band found - leave initial band's description
         }.toSet()
     )
 }
+
 
 fun mainCoroutine(): Map<String, String> = runBlocking {
     GlobalScope.launch {

@@ -14,9 +14,9 @@ database:
     maxPoolSize: 4
   mongo:
     url: "localhost:27017"
-    dbName: "mem_db"
-    user: mem_user
-    password: mem_secret
+    dbName: "bands"
+    user: bands_user
+    password: bands_secret
 
 flyway:
   verbose: true

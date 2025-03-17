@@ -16,7 +16,7 @@ class ApplicationTest {
         }
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)
-            assertEquals("Hello World!", bodyAsText())
+            assertEquals("You are on the music REST API!", bodyAsText())
         }
     }
 }

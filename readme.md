@@ -81,7 +81,7 @@ run front-end and mems:
 run movies with:
 ![img.png](movies_run_config.png)
 
-DBs runs on Docker, separate mongo and postgres
+DBs runs on Docker, separate mongo and postgres containers
 
 
 install DB

@@ -6,6 +6,14 @@ import java.util.*
 @Serializable
 data class Band(val bandName: String, var description: String, val imagePath: String)
 
+@Serializable
+data class BandDescription(val bandName: String, val bandDescription: Map<Lang, String>)
+
+enum class Lang(val lang: String) {
+    EN("en"),
+    RU("ru")
+}
+
 
 //This constant is created until
 // 1)there are integration with mongoDB exist and
