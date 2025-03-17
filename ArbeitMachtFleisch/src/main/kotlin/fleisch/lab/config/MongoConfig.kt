@@ -23,6 +23,5 @@ class MongoLiquibaseService {
         Liquibase("mongo/migration/01_init_band_data.yml", ClassLoaderResourceAccessor(), mongoDatabase).use { liquibase ->
             liquibase.update("")
         }
-
     }
 }

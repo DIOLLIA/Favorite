@@ -40,5 +40,22 @@ databaseChangeLog:
                   }
                 ]
               }
-# Instead, instead set\unset it's possible to use $rename to rename the field and then add new fields with empty values.
-#see readme.txt for more detailsq`
+  # Instead, instead set\unset it's possible to use $rename to rename the field and then add new fields with empty values.
+  #see readme.txt for more details
+  - changeSet:
+      id: 4
+      author: fleischLab
+      changes:
+        - runCommand:
+            command: |
+              {
+               createIndexes: "bands_data",
+               indexes: [
+                 {
+                   key: {
+                     "band_name": 1
+                   },
+                   name: "band_name_unique_idx",
+                   unique: true  
+                 }]
+                }

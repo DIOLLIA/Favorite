@@ -1,32 +1,20 @@
 package fleisch.lab.plugins
 
+import com.mongodb.MongoWriteException
 import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import com.mongodb.reactivestreams.client.MongoDatabase
+import fleisch.lab.model.BandDescription
+import fleisch.lab.model.Lang
 import io.ktor.server.application.*
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.collect
 import org.bson.BsonInt64
 import org.bson.Document
 import org.koin.dsl.module
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-fun mongoDbModule(app: Application) = module {
-    val envConfig = app.environment.config
-    val url = envConfig.property("database.mongo.url").getString()
-    val user = envConfig.property("database.mongo.user").getString()
-    val password = envConfig.property("database.mongo.password").getString()
-    val dsn = "mongodb://$user:$password@$url/?authSource=mem_db"
-
-    single {
-        MongoClients.create(dsn)
-    }
-    single {
-        val mongoClient = get<MongoClient>()
-        mongoClient.getDatabase(envConfig.property("database.mongo.dbName").getString())
-    }
-}
 
 class MongoService(private val database: MongoDatabase) {
     private val log: Logger = LoggerFactory.getLogger(javaClass)
@@ -37,8 +25,44 @@ class MongoService(private val database: MongoDatabase) {
         log.info("MongoDB connection established")
     }
 
-    suspend fun getAllMems(): String {
-        return database.getCollection("mems_").find().first().awaitFirst().toJson()
+    suspend fun getAllBandsDescs(): String {
+        val documents = mutableListOf<Document>()
+        database.getCollection("bands_data").find().collect { document ->
+            documents.add(document)
+        }
+        return documents.joinToString("\n")
+    }
+
+    suspend fun addBandDescription(bandDescription: BandDescription): Boolean {
+        log.info("Adding BandDescription to database")
+        return try {
+            val result = database.getCollection("bands_data")
+                .insertOne(buildDocument(bandDescription))
+                .awaitFirst()
+
+            if (!result.wasAcknowledged()) {
+                log.error("Error during adding BandDescription")
+                false
+            } else
+                true
+        } catch (exc: MongoWriteException) {
+            if (exc.code == 11000) {
+                log.error("Band with name '${bandDescription.bandName}' already exists")
+            } else {
+                log.error("Error during adding BandDescription. Cause: $exc")
+            }
+            false
+        } catch (exc: Exception) {
+            log.error("Error during adding BandDescription. Cause: $exc")
+            false
+        }
     }
 }
 
+private fun buildDocument(band: BandDescription): Document {
+    return Document()
+        .append("band_name", band.bandName)
+        .append("band_description_en", band.bandDescription.getOrElse(Lang.EN, { "" }))
+        .append("band_description_de", band.bandDescription.getOrElse(Lang.RU, { "" }))
+
+}

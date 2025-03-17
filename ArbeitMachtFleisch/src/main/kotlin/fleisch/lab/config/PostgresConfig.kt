@@ -1,8 +1,6 @@
 package fleisch.lab.config
 
 
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
 import org.flywaydb.core.Flyway
 import org.koin.dsl.module
@@ -26,20 +24,7 @@ fun connectToPostgres(dbConfig: DbConfig): Connection {
 }
 
 //read config from the props
-fun postgresDbModule(dbConfig: DbConfig) = module {
-    single { dbConfig } //configure gradle to put app.yaml to the root of resources (now its in resources/main)
 
-//    this manage db connections
-    single {
-        HikariDataSource(HikariConfig().apply {
-            jdbcUrl = get<DbConfig>().url
-            username = get<DbConfig>().user
-            password = get<DbConfig>().password
-            driverClassName = get<DbConfig>().driver
-            maximumPoolSize = get<DbConfig>().maxPoolSize
-        })
-    }
-}
 
 val flywayModule = module { // single initialize by request, to invoke it we use flyway.migrate()
     single {
