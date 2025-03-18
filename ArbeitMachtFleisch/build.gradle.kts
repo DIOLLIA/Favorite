@@ -34,6 +34,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("io.ktor:ktor-server-auth-jvm")
+    implementation("io.ktor:ktor-server-status-pages")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml")
