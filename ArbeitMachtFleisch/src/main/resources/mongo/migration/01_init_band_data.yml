@@ -59,3 +59,21 @@ databaseChangeLog:
                    unique: true  
                  }]
                 }
+  - changeSet:
+      id: 5
+      author: fleischLab
+      changes:
+      - runCommand:
+          command: |
+            {
+              update: "bands_data",
+              updates: [
+                {
+                  q: { "band_description_de": { "$exists": true } },
+                  u: {
+                    $rename: { "band_description_de": "band_description_ru" }
+                  },
+                  multi: true
+                }
+              ]
+            }
