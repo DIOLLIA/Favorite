@@ -1,4 +1,6 @@
+todo:
 
 create error handling: when DB connection is not established app is falling on startup
 change flyway to liquibase as it's supported for noth sql and no-sql DBs
 
+tech:
