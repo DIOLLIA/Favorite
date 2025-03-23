@@ -1,10 +1,13 @@
 import Image from "next/image";
 
+interface FooterProps {
+    style?: React.CSSProperties;
+}
 
-export default function Footer() {
+export default function Footer({style}: FooterProps) {
     return (
         <div>
-            <footer className="footer">
+            <footer className="footer" style={style}>
                 <a
                     className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-white"
                     href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"

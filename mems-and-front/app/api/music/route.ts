@@ -3,8 +3,9 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang');
+    const page = searchParams.get('page');
 
-    const response = await fetch(`http://localhost:8083/bands?lang=${lang}`, {
+    const response = await fetch(`http://localhost:8083/bands?lang=${lang}&page=${page}`, {
         method: 'GET',
     });
 

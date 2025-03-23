@@ -33,7 +33,7 @@ const headerNavBarLinks = [
 
 export default function Header() {
     return (
-        <div className="grid grid-cols-3 text-white tracking-wider">
+        <div className="header grid grid-cols-3">
             {
                 headerNavBarLinks.map(link => (
                     <NavFooterLinks

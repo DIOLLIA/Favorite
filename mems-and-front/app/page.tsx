@@ -58,7 +58,7 @@ export default function Home() {
                 }
             </div>
             <FloatingMemCircle/>
-            <Footer/>
+            <Footer style ={{ backgroundColor: "transparent "}}/>
         </main>
     );
 }
