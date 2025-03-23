@@ -3,6 +3,7 @@ import Footer from "@/app/ui/global/footer";
 import Header from "@/app/ui/global/header";
 import FloatingCircle from "@/app/ui/main/mems";
 import GoHome from "@/app/ui/global/goHome";
+import BandsBar from "@/app/music/Bands";
 
 export const metadata: Metadata = {
     title: 'Music',
@@ -14,7 +15,8 @@ export default function Home() {
             <GoHome/>
             <Header/>
             <FloatingCircle/>
-            <Footer/>
+            <BandsBar/>
+            <Footer />
         </div>
     );
 }

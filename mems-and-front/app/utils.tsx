@@ -32,7 +32,7 @@ export function PopupNotification({onConfirm, onDecline}: {onConfirm: () => void
             <div className="bg-white p-4 rounded shadow-lg text-center">
                 <p className="text-black">You will be redirected to the external website</p>
                 <button onClick={onConfirm} className="bg-blue-500 text-white px-4 py-2 rounded">OK</button>
-                <button onClick={onDecline} className="bg-gray-300 text-black px-4 py-2 rounded">OMG PLS DON'T</button>
+                <button onClick={onDecline} className="bg-gray-300 text-black px-4 py-2 rounded">OMG PLS DON&#39T</button>
             </div>
         </div>
     );

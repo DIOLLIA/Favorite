@@ -35,9 +35,9 @@ function MySection({uniqueId, link, header, imgSrc, alt}: MySectionProps) {
 }
 
 const sections = [
-    {id: 'Games', link: '/games', header: 'Games', imgSrc: '/gothic.jpg', alt: 'gothic placeholder'},
-    {id: 'Movie', link: '/movies?limit=3&offset=0', header: 'Movie', imgSrc: '/Lebowski.jpg', alt: 'lebowski placeholder'},
-    {id: 'Music', link: '/music', header: 'Music', imgSrc: '/rammstein.jpg', alt: 'rammstein placeholder'},
+    {id: 'Games', link: '/games', header: 'Games', imgSrc: '/mainPage/gothic.jpg', alt: 'gothic placeholder'},
+    {id: 'Movie', link: '/movies?limit=3&offset=0', header: 'Movie', imgSrc: '/mainPage/Lebowski.jpg', alt: 'lebowski placeholder'},
+    {id: 'Music', link: '/music', header: 'Music', imgSrc: '/mainPage/rammstein.jpg', alt: 'rammstein placeholder'},
 ]
 
 export default function Home() {
@@ -58,7 +58,7 @@ export default function Home() {
                 }
             </div>
             <FloatingMemCircle/>
-            <Footer/>
+            <Footer style ={{ backgroundColor: "transparent "}}/>
         </main>
     );
 }
