@@ -16,12 +16,11 @@ fun Application.configureDbs() {
         slf4jLogger()
         modules(
             module { single { this@configureDbs } }, // to receive this on other components
+            musicModule,
             postgresDbModule(postgresConfig()),
             flywayModule,
-            dbBandConnection,
-            mongoDbModule(this@configureDbs),
-            mongoServiceConnection,
-            mongoMigration
+            bandConnectionModule,
+            descriptionModule(this@configureDbs),
         )
     }
     runMigrations()
