@@ -1,21 +1,25 @@
-package fleisch.lab.plugins
+package fleisch.lab.service
 
 import com.mongodb.MongoWriteException
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Projections
 import com.mongodb.client.model.Updates
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
 import fleisch.lab.model.BandDescription
 import fleisch.lab.model.Lang
+import fleisch.lab.service.Utils.DescriptionLanguage.validateLanguage
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
-import kotlinx.coroutines.reactive.collect
 import org.bson.BsonInt64
 import org.bson.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class MongoService(private val database: MongoDatabase) {
+class DescriptionService(private val database: MongoDatabase) {
+    private val utils: Utils = Utils()
     private val log: Logger = LoggerFactory.getLogger(javaClass)
     private val bandCollection: MongoCollection<Document> = database.getCollection("bands_data")
 
@@ -25,16 +29,33 @@ class MongoService(private val database: MongoDatabase) {
         log.info("MongoDB connection established")
     }
 
-    suspend fun getAllBandsDescs(): String {
-        val documents = mutableListOf<Document>()
-        bandCollection.find().collect { document ->
-            documents.add(document)
+    suspend fun getAllBandsDescriptions(lang: String?): Map<String, String> {
+        val descriptionLang = getDescriptionColumn(validateLanguage(lang))
+        log.info("Getting bands description in $descriptionLang")
+
+        val bandNameField = "band_name"
+
+        val result = bandCollection.find()
+            .projection(
+                Projections.fields(
+                    Projections.include(bandNameField, descriptionLang),
+                    Projections.excludeId()
+                )
+            )
+            .asFlow()
+            .toList()
+
+        return result.associate { document ->
+            document.getString(bandNameField) to document.getString(descriptionLang)
         }
-        return documents.joinToString("\n")
     }
 
+    //todo change method to return more info
     suspend fun addBandDescription(bandDescription: BandDescription): Boolean {
-        log.info("Adding BandDescription to database")
+        val alreadyExistsCode = 11000
+        log.info("Adding description for ${bandDescription.name}")
+        val errorMsg = "Error during adding BandDescription. Cause: "
+
         return try {
             val result = bandCollection
                 .insertOne(buildDocument(bandDescription))
@@ -42,26 +63,30 @@ class MongoService(private val database: MongoDatabase) {
 
             if (!result.wasAcknowledged()) {
                 log.error("Error during adding BandDescription")
-                false
-            } else
-                true
+            }
+            result.wasAcknowledged()
+
         } catch (exc: MongoWriteException) {
-            if (exc.code == 11000) {
+            if (exc.code == alreadyExistsCode) {
                 log.error("Band with name '${bandDescription.name}' already exists")
             } else {
-                log.error("Error during adding BandDescription. Cause: $exc")
+                log.error(errorMsg, exc)
             }
             false
         } catch (exc: Exception) {
-            log.error("Error during adding BandDescription. Cause: $exc")
+            log.error(errorMsg, exc)
             false
         }
     }
 
     suspend fun updateBandDescription(bandDescription: BandDescription): Boolean {
+        log.info("updating description for band: ${bandDescription.name}")
+
         val mongoColumnsToBandDescription: Map<Lang, String> =
-            mapOf(Lang.EN to "band_description_en",
-                Lang.RU to "band_description_ru")
+            mapOf(
+                Lang.EN to "band_description_en",
+                Lang.RU to "band_description_ru"
+            )
 
         val updates = bandDescription.description
             .filterValues { it.isNotEmpty() }
@@ -84,5 +109,14 @@ private fun buildDocument(band: BandDescription): Document {
         .append("band_name", band.name)
         .append("band_description_en", band.description.getOrElse(Lang.EN, { "" }))
         .append("band_description_ru", band.description.getOrElse(Lang.RU, { "" }))
+}
 
+private fun getDescriptionColumn(lang: String): String {
+    return when (lang) {
+        Lang.EN.lang -> "band_description_en"
+        Lang.RU.lang -> "band_description_ru"
+        else -> {
+            "non reachable statement"
+        }
+    }
 }

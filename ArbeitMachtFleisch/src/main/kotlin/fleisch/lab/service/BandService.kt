@@ -1,4 +1,4 @@
-package com.example.plugins
+package fleisch.lab.service
 
 import fleisch.lab.model.Band
 import kotlinx.coroutines.Dispatchers
@@ -10,28 +10,27 @@ import java.sql.Statement
 @Serializable
 class BandService(private val connection: Connection) {
     companion object {
-        private const val SELECT_BANDS = "SELECT * FROM bands"
+        private const val SELECT_BANDS = "SELECT * FROM bands LIMIT ? OFFSET ?"
         private const val SELECT_BAND_BY_ID = "SELECT * FROM bands WHERE band_name = ?"
         private const val INSERT_BAND = "INSERT INTO bands (band_name, description, image_path) VALUES (?, ?, ?)"
         private const val UPDATE_BAND = "UPDATE bands SET band_name = ?, description = ?, image_path = ? WHERE id = ?"
         private const val DELETE_BAND = "DELETE FROM bands WHERE id = ?"
     }
 
-    // Create new Band
-      suspend fun create(band: Band): Int = withContext(Dispatchers.IO) {
-            val statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
-            statement.setString(1, band.bandName)
-            statement.setString(2, band.description)
-            statement.setString(3, band.imagePath)
-            statement.executeUpdate()
+    suspend fun create(band: Band): Int = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
+        statement.setString(1, band.bandName)
+        statement.setString(2, band.description)
+        statement.setString(3, band.imagePath)
+        statement.executeUpdate()
 
-            val generatedKeys = statement.generatedKeys
-            if (generatedKeys.next()) {
-                return@withContext generatedKeys.getInt(1)
-            } else {
-                throw Exception("Unable to retrieve the id of the newly inserted Band")
-            }
+        val generatedKeys = statement.generatedKeys
+        if (generatedKeys.next()) {
+            return@withContext generatedKeys.getInt(1)
+        } else {
+            throw Exception("Unable to retrieve the id of the newly inserted Band")
         }
+    }
 
     // Read a Band
     /*    suspend fun read(id: Int): Band = withContext(Dispatchers.IO) {
@@ -47,10 +46,15 @@ class BandService(private val connection: Connection) {
                 throw Exception("Record not found")
             }
         }*/
-    // Read a Band
-    suspend fun read(): Set<Band> = withContext(Dispatchers.IO) {
+
+    suspend fun getBands(page: Int?): Set<Band> = withContext(Dispatchers.IO) {
+        val limit = 4
+        val actualPage = page ?: 0
         val statement = connection.prepareStatement(SELECT_BANDS)
+        statement.setInt(2, actualPage)
+        statement.setInt(1, limit)
         val resultSet = statement.executeQuery()
+
         val bands = mutableSetOf<Band>()
         while (resultSet.next()) {
             bands.add(

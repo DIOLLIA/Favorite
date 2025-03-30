@@ -1,17 +1,17 @@
 package fleisch.lab.modules
 
-import com.example.plugins.BandService
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import fleisch.lab.config.DbConfig
 import fleisch.lab.config.connectToPostgres
 import fleisch.lab.config.postgresConfig
+import fleisch.lab.service.BandService
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import java.sql.Connection
 
 
-val dbBandConnection = module {
+val bandConnectionModule = module {
     single { connectToPostgres(dbConfig = get<Application>().postgresConfig()) }
     single { BandService(get<Connection>()) }
 }
