@@ -41,7 +41,7 @@ fun Application.configureRouting() {
             call.respond(musicService.getAllBandsDescriptions(lang))
         }
 
-        post("/bands/description/add") {
+        post("/bands/descriptions/add") {
             val bandDescription = call.receive<BandDescription>()
 
             call.respond(musicService.addBandDescription(bandDescription))

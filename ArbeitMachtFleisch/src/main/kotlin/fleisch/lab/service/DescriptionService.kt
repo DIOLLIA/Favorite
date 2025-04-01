@@ -6,6 +6,7 @@ import com.mongodb.client.model.Projections
 import com.mongodb.client.model.Updates
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
+import fleisch.lab.model.ApiResponse
 import fleisch.lab.model.BandDescription
 import fleisch.lab.model.Lang
 import fleisch.lab.service.Utils.DescriptionLanguage.validateLanguage
@@ -50,11 +51,13 @@ class DescriptionService(private val database: MongoDatabase) {
         }
     }
 
-    //todo change method to return more info
-    suspend fun addBandDescription(bandDescription: BandDescription): Boolean {
+    suspend fun addBandDescription(bandDescription: BandDescription): ApiResponse<String> {
         val alreadyExistsCode = 11000
-        log.info("Adding description for ${bandDescription.name}")
-        val errorMsg = "Error during adding BandDescription. Cause: "
+        val errorMsg: (String) -> String = { cause ->
+            "Error during creating band description. Cause: $cause"
+        }
+
+        log.info("Creating description for `${bandDescription.name}`")
 
         return try {
             val result = bandCollection
@@ -62,20 +65,22 @@ class DescriptionService(private val database: MongoDatabase) {
                 .awaitFirst()
 
             if (!result.wasAcknowledged()) {
-                log.error("Error during adding BandDescription")
+                log.error("band description wasn't acknowledged during insert to the db ")
+                ApiResponse.error(data = bandDescription.name, message = errorMsg("wasn't acknowledged"))
             }
-            result.wasAcknowledged()
+            ApiResponse.created(data = bandDescription.name, message = "band description successfully created")
 
-        } catch (exc: MongoWriteException) {
-            if (exc.code == alreadyExistsCode) {
-                log.error("Band with name '${bandDescription.name}' already exists")
-            } else {
-                log.error(errorMsg, exc)
-            }
-            false
         } catch (exc: Exception) {
-            log.error(errorMsg, exc)
-            false
+            when {
+                exc is MongoWriteException && exc.code == alreadyExistsCode -> {
+                    log.error(errorMsg("'${bandDescription.name}' already exists"))
+                    ApiResponse.error(data = bandDescription.name, message = errorMsg("Band already exists"))
+                }
+                else -> {
+                    log.error(errorMsg(exc.toString()))
+                    ApiResponse.error(data = bandDescription.name, message = errorMsg(exc.toString()))
+                }
+            }
         }
     }
 
