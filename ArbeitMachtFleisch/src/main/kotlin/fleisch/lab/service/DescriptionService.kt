@@ -6,9 +6,7 @@ import com.mongodb.client.model.Projections
 import com.mongodb.client.model.Updates
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
-import fleisch.lab.model.ApiResponse
-import fleisch.lab.model.BandDescription
-import fleisch.lab.model.Lang
+import fleisch.lab.model.*
 import fleisch.lab.service.Utils.DescriptionLanguage.validateLanguage
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
@@ -51,7 +49,7 @@ class DescriptionService(private val database: MongoDatabase) {
         }
     }
 
-    suspend fun addBandDescription(bandDescription: BandDescription): ApiResponse<String> {
+    suspend fun addBandDescription(bandDescription: BandDescription): ApiResponse {
         val alreadyExistsCode = 11000
         val errorMsg: (String) -> String = { cause ->
             "Error during creating band description. Cause: $cause"
@@ -66,19 +64,19 @@ class DescriptionService(private val database: MongoDatabase) {
 
             if (!result.wasAcknowledged()) {
                 log.error("band description wasn't acknowledged during insert to the db ")
-                ApiResponse.error(data = bandDescription.name, message = errorMsg("wasn't acknowledged"))
+                ApiResponseError(data = mapOf("band" to bandDescription.name), message = errorMsg("wasn't acknowledged"))
             }
-            ApiResponse.created(data = bandDescription.name, message = "band description successfully created")
+            ApiResponseCreated(data = mapOf("band" to bandDescription.name), message = "band description successfully created")
 
         } catch (exc: Exception) {
             when {
                 exc is MongoWriteException && exc.code == alreadyExistsCode -> {
                     log.error(errorMsg("'${bandDescription.name}' already exists"))
-                    ApiResponse.error(data = bandDescription.name, message = errorMsg("Band already exists"))
+                    ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg("Band already exists"))
                 }
                 else -> {
                     log.error(errorMsg(exc.toString()))
-                    ApiResponse.error(data = bandDescription.name, message = errorMsg(exc.toString()))
+                    ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg(exc.toString()))
                 }
             }
         }
