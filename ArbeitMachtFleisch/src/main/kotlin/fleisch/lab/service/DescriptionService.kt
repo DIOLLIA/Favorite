@@ -18,7 +18,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class DescriptionService(private val database: MongoDatabase) {
-    private val utils: Utils = Utils()
     private val log: Logger = LoggerFactory.getLogger(javaClass)
     private val bandCollection: MongoCollection<Document> = database.getCollection("bands_data")
 
@@ -64,9 +63,15 @@ class DescriptionService(private val database: MongoDatabase) {
 
             if (!result.wasAcknowledged()) {
                 log.error("band description wasn't acknowledged during insert to the db ")
-                ApiResponseError(data = mapOf("band" to bandDescription.name), message = errorMsg("wasn't acknowledged"))
+                ApiResponseError(
+                    data = mapOf("band" to bandDescription.name),
+                    message = errorMsg("wasn't acknowledged")
+                )
             }
-            ApiResponseCreated(data = mapOf("band" to bandDescription.name), message = "band description successfully created")
+            ApiResponseCreated(
+                data = mapOf("band" to bandDescription.name),
+                message = "band description successfully created"
+            )
 
         } catch (exc: Exception) {
             when {
@@ -74,6 +79,7 @@ class DescriptionService(private val database: MongoDatabase) {
                     log.error(errorMsg("'${bandDescription.name}' already exists"))
                     ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg("Band already exists"))
                 }
+
                 else -> {
                     log.error(errorMsg(exc.toString()))
                     ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg(exc.toString()))
@@ -100,7 +106,7 @@ class DescriptionService(private val database: MongoDatabase) {
             }
 
         bandCollection.updateOne(
-            Filters.eq("band_name", bandDescription.name),
+            Filters.eq("band_name", bandDescription.name.lowercase()),
             Updates.combine(updates)
         ).awaitFirst()
         return true

@@ -2,6 +2,7 @@ package fleisch.lab.service
 
 import fleisch.lab.model.Band
 import fleisch.lab.model.BandDescription
+import fleisch.lab.model.BandResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -41,32 +42,32 @@ class MusicService : KoinComponent {
     suspend fun updateBandDescription(description: BandDescription) =
         descriptionService.updateBandDescription(description)
 
-    /*
-    It switches the execution context of the current coroutine to another CoroutineDispatcher - in this case Dispatchers.IO.
 
-     */
-    suspend fun getBandsWithPagination(page: Int?): Set<Band> = withContext(Dispatchers.IO) {
+    //It switches the execution context of the current coroutine to another CoroutineDispatcher - in this case Dispatchers.IO.
+    suspend fun getBandsWithPagination(page: Int?): BandResponse = withContext(Dispatchers.IO) {
         bandService.getBands(page)
     }
 
-    suspend fun getBandsWithDescriptions(lang: String?, page: Int?): Set<Band> {
+    suspend fun getBandsWithDescriptions(lang: String?, page: Int?): BandResponse {
         return coroutineScope {
-            //todo pass page param to the mongo for getting proper descriptions
             val bandsDeferred = async {
                 bandService.getBands(page)
             }
+            //todo pass page param to the mongo for getting proper descriptions
             val descriptionsDeferred = async {
                 descriptionService.getAllBandsDescriptions(lang)
             }
 
-            val bands = bandsDeferred.await()
+            val bandResponse = bandsDeferred.await()
             val descriptions = descriptionsDeferred.await()
 
-            bands.associateWith { band ->
+            val bands = bandResponse.bands.associateWith { band ->
                 descriptions.getCaseInsensitive(band.bandName) ?: band.description
             }
                 .map { (band, newDescription) -> band.copy(description = newDescription) }
                 .toSet()
+
+            BandResponse(bands , bandResponse.hasMore)
         }
     }
 

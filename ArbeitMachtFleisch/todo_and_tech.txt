@@ -1,6 +1,7 @@
 todo:
 
 create error handling: when DB connection is not established app is falling on startup
-change flyway to liquibase as it's supported for noth sql and no-sql DBs
-
+change flyway to liquibase as it's supported for both sql and no-sql DBs
+create in postgres bands table `bands` column displayed name, because sometimes it doesn't match
+with English lowercase regular name
 tech:
