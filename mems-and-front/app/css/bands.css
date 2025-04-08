@@ -1,5 +1,4 @@
 .bands-container {
-    position: absolute;
     top: 5%;
     right: 10%;
     bottom: 5%;
@@ -9,8 +8,8 @@
 .bands-bar {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 20px;
+    gap: 40px;
+    padding: 40px;
 }
 
 .band-card {
@@ -42,4 +41,18 @@
 
 .loading-trigger {
     height: 1px;
+}
+
+.radio-group {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
 }
