@@ -46,7 +46,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     const baseValidation = baseSchema.pick(
         {
         name: true,
-        description: true,
+        newDescription: true,
         image: {contentType: true},
     }
     ).safeParse(dataToValidate);

@@ -16,7 +16,7 @@ export default function Home() {
             <Header/>
             <FloatingCircle/>
             <BandsBar/>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

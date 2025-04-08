@@ -3,10 +3,11 @@
 import {useLocale} from "@/app/ui/global/useLocale";
 import {useEffect, useRef, useState} from "react";
 import '@/app/css/bands.css'
+import BandCard from "@/app/music/bandCard";
 
 const MUSIC_API_PATH = '/api/music'
 
-interface Band {
+export interface Band {
     bandName: string,
     description: string
     imagePath: string
@@ -21,25 +22,27 @@ export default function BandsBar() {
     const loader = useRef<HTMLDivElement | null>(null)
     const [isLoading, setIsLoading] = useState(false);
 
+    const initialPage = 0
+    const pageIncrement = 4
 
     const fetchData = async (page: number) => {
+        if (!hasMore || isLoading) {
+            return;
+        }
         try {
             setIsLoading(true)
             const response = await fetch(`${MUSIC_API_PATH}?lang=${lang}&page=${page}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch bands');
             }
-            const {bands} = await response.json() as { bands: Band[] };
 
-            if (bands.length === 0) {
-                setHasMore(false)
-                return
-            }
-            setBands(previous => [...previous, ...bands])
+            const {bands: newBands, hasMore} = await response.json() as { bands: Band[], hasMore: boolean };
+
+            setBands(previous => [...previous, ...newBands])
+            setHasMore(hasMore)
 
         } catch (error) {
             setError((error as Error).message);
-            return <div>Error loading bands. Please try again later.</div>;
         } finally {
             setIsLoading(false);
         }
@@ -47,7 +50,7 @@ export default function BandsBar() {
 
     useEffect(() => {
         setBands([]);
-        setPage(0);
+        setPage(initialPage);
         setHasMore(true);
     }, [lang]);  // useEffect on `lang` change
 
@@ -55,39 +58,60 @@ export default function BandsBar() {
         fetchData(page);
     }, [page, lang]);
 
-
     useEffect(() => {
-        if (!hasMore || isLoading) {
-            return;
-        }
-        const observer = new IntersectionObserver(
-            entries => {
-                if (entries[0].isIntersecting) {
-                    setPage(previousPage => previousPage + 1)
-                }
-            },
-            {threshold: 1}
-        );
-        if (loader.current) observer.observe(loader.current);
-        return () => {
-            if (loader.current) observer.unobserve(loader.current);
-        };
-    }, [hasMore, isLoading]);
+            if (!hasMore || isLoading) return;
+
+            const observer = new IntersectionObserver(
+                entries => {
+                    if (entries[0].isIntersecting) {
+                        setPage(previousPage => previousPage + pageIncrement)
+                    }
+                },
+                {threshold: 1, rootMargin: "0px 0px -5px 0px"}
+            );
+            if (loader.current) observer.observe(loader.current);
+            return () => {
+                if (loader.current) observer.unobserve(loader.current);
+            };
+        }, [hasMore, isLoading]
+    );
 
     if (error) {
         return <div>Error loading bands: {error}</div>;
     }
 
-
     return (
         <div className="bands-container">
             <div className="bands-bar">
                 {bands.map((band, index) => (
-                    <div className="band-card" key={index}>
-                        <img src={band.imagePath} alt={band.bandName}/>
-                        <h3>{band.bandName}</h3>
-                        <p>{band.description}</p>
-                    </div>
+                    <BandCard
+                        key={index}
+                        band={band}
+                        name={band.bandName}
+                        onSave={async (bandName, newDescription) => {
+                            try {
+                                const response = await fetch(`/api/music/?lang=${lang}&bandName=${bandName}`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({newDescription}),
+                                });
+
+                                if (!response.ok) {
+                                    throw new Error(`Failed to update: ${response.statusText}`);
+                                } else {
+                                    setBands(prev =>
+                                        prev.map((b) =>
+                                            b.bandName === bandName ? { ...b, description: newDescription } : b
+                                        )
+                                    );
+                                }
+                            } catch (err) {
+                                console.error(err);
+                            }
+                        }}
+                    />
                 ))}
                 {hasMore && <div ref={loader} className="loading-trigger"></div>}
             </div>
