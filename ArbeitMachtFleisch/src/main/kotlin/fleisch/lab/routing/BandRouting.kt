@@ -41,15 +41,14 @@ fun Application.configureRouting() {
             call.respond(musicService.getAllBandsDescriptions(lang))
         }
 
-        post("/bands/description/add") {
+        post("/bands/descriptions/add") {
             val bandDescription = call.receive<BandDescription>()
 
             call.respond(musicService.addBandDescription(bandDescription))
         }
-
-        patch("/bands/description/update") {
-            val bandDescription = call.receive<BandDescription>()
-            val updated = musicService.updateBandDescription(bandDescription)
+        patch("/bands/description/update"){
+        val bandDescription = call.receive<BandDescription>()
+        val updated = musicService.updateBandDescription(bandDescription)
 
             if (updated) {
                 call.respond(HttpStatusCode.OK, "Band description updated successfully")

@@ -1,6 +1,7 @@
 package fleisch.lab.service
 
 import fleisch.lab.model.Band
+import fleisch.lab.model.BandResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -47,7 +48,7 @@ class BandService(private val connection: Connection) {
             }
         }*/
 
-    suspend fun getBands(page: Int?): Set<Band> = withContext(Dispatchers.IO) {
+    suspend fun getBands(page: Int?): BandResponse = withContext(Dispatchers.IO) {
         val limit = 4
         val actualPage = page ?: 0
         val statement = connection.prepareStatement(SELECT_BANDS)
@@ -66,9 +67,9 @@ class BandService(private val connection: Connection) {
             )
         }
         if (bands.isEmpty()) {
-            throw Exception("Record not found")
+            return@withContext BandResponse(emptySet<Band>(), false)
         }
-        return@withContext bands
+        return@withContext BandResponse(bands, (bands.size == limit))
     }
 
     // Update a Band

@@ -6,8 +6,7 @@ import com.mongodb.client.model.Projections
 import com.mongodb.client.model.Updates
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
-import fleisch.lab.model.BandDescription
-import fleisch.lab.model.Lang
+import fleisch.lab.model.*
 import fleisch.lab.service.Utils.DescriptionLanguage.validateLanguage
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
@@ -19,7 +18,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class DescriptionService(private val database: MongoDatabase) {
-    private val utils: Utils = Utils()
     private val log: Logger = LoggerFactory.getLogger(javaClass)
     private val bandCollection: MongoCollection<Document> = database.getCollection("bands_data")
 
@@ -50,11 +48,13 @@ class DescriptionService(private val database: MongoDatabase) {
         }
     }
 
-    //todo change method to return more info
-    suspend fun addBandDescription(bandDescription: BandDescription): Boolean {
+    suspend fun addBandDescription(bandDescription: BandDescription): ApiResponse {
         val alreadyExistsCode = 11000
-        log.info("Adding description for ${bandDescription.name}")
-        val errorMsg = "Error during adding BandDescription. Cause: "
+        val errorMsg: (String) -> String = { cause ->
+            "Error during creating band description. Cause: $cause"
+        }
+
+        log.info("Creating description for `${bandDescription.name}`")
 
         return try {
             val result = bandCollection
@@ -62,20 +62,29 @@ class DescriptionService(private val database: MongoDatabase) {
                 .awaitFirst()
 
             if (!result.wasAcknowledged()) {
-                log.error("Error during adding BandDescription")
+                log.error("band description wasn't acknowledged during insert to the db ")
+                ApiResponseError(
+                    data = mapOf("band" to bandDescription.name),
+                    message = errorMsg("wasn't acknowledged")
+                )
             }
-            result.wasAcknowledged()
+            ApiResponseCreated(
+                data = mapOf("band" to bandDescription.name),
+                message = "band description successfully created"
+            )
 
-        } catch (exc: MongoWriteException) {
-            if (exc.code == alreadyExistsCode) {
-                log.error("Band with name '${bandDescription.name}' already exists")
-            } else {
-                log.error(errorMsg, exc)
-            }
-            false
         } catch (exc: Exception) {
-            log.error(errorMsg, exc)
-            false
+            when {
+                exc is MongoWriteException && exc.code == alreadyExistsCode -> {
+                    log.error(errorMsg("'${bandDescription.name}' already exists"))
+                    ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg("Band already exists"))
+                }
+
+                else -> {
+                    log.error(errorMsg(exc.toString()))
+                    ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg(exc.toString()))
+                }
+            }
         }
     }
 
@@ -97,7 +106,7 @@ class DescriptionService(private val database: MongoDatabase) {
             }
 
         bandCollection.updateOne(
-            Filters.eq("band_name", bandDescription.name),
+            Filters.eq("band_name", bandDescription.name.lowercase()),
             Updates.combine(updates)
         ).awaitFirst()
         return true
