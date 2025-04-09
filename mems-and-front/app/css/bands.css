@@ -56,3 +56,37 @@
     gap: 0.5rem;
     cursor: pointer;
 }
+
+.band-description {
+    color: black;
+    padding: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+.description-edit-action-button {
+    backgroundColor: #e0e0e0;
+    color: black;
+    border: 1px solid #aaa;
+    padding: 6px 12px;
+    borderRadius: 4px;
+    cursor: pointer;
+}
+
+.band-card .band-description-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.band-card.expanded img {
+    height: auto;
+    max-height: 600px;
+}
+
+.band-card.expanded .band-description-preview {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+}
