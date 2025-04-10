@@ -105,11 +105,12 @@ class DescriptionService(private val database: MongoDatabase) {
                 }
             }
 
-        bandCollection.updateOne(
+       val result = bandCollection.updateOne(
             Filters.eq("band_name", bandDescription.name.lowercase()),
             Updates.combine(updates)
         ).awaitFirst()
-        return true
+
+        return result.modifiedCount == 1L
     }
 }
 
