@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
 import clsx from "clsx"; // conditionally apply css
 
 interface FooterProps {
@@ -11,9 +11,14 @@ interface FooterProps {
 
 function NavFooterLinks(props: FooterProps) {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const lang = searchParams.get('lang') || 'en';
+    const hrefWithLang = `${props.href}${props.href.includes('?') ? '&' : '?'}lang=${lang}`;
+
     return (
         <Link key={props.uniqueId}
-              href={props.href}
+              href={hrefWithLang}
               className={clsx('text-white',
                   {'text-yellow-500': pathname === props.href},
               )}>

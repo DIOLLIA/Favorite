@@ -9,7 +9,10 @@ interface BandCardProps {
     onSave: (name: string, description: string) => void;
 }
 
-export default function BandCard({band, name, onSave}: BandCardProps) {
+export default function BandCard({band, name, onSave, isExpanded, onToggleExpand}: BandCardProps & {
+    isExpanded: boolean;
+    onToggleExpand: () => void;
+}) {
     const [editing, setEditing] = useState(false);
     const [editedDescription, setEditedDescription] = useState(band.description);
 
@@ -32,58 +35,45 @@ export default function BandCard({band, name, onSave}: BandCardProps) {
     };
 
     return (
-        <div className="band-card">
+        <div
+            className={`band-card ${isExpanded ? 'expanded' : ''}`}
+            onClick={() => {
+                if (!editing) {
+                    onToggleExpand();
+                }
+            }}
+            style={{ cursor: editing ? 'default' : 'pointer' }}
+        >
             <img src={imageUrl} alt={band.bandName} />
             <h3>{band.bandName}</h3>
 
             {editing ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <textarea
-                        value={editedDescription}
-                        onChange={(e) => setEditedDescription(e.target.value)}
-                        style={{
-                            backgroundColor: 'white',
-                            color: 'black',
-                            padding: '8px',
-                            borderRadius: '4px',
-                            border: '1px solid #ccc',
-                            resize: 'vertical',
-                            minHeight: '60px',
-                        }}
-                    />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '0 10px 10px' }}>
+                <textarea
+                    className="band-description"
+                    value={editedDescription}
+                    onChange={(e) => setEditedDescription(e.target.value)}
+                />
                     <div style={{ display: 'flex', gap: '8px' }}>
-                        <button
-                            onClick={handleSave}
-                            style={{
-                                backgroundColor: '#e0e0e0',
-                                color: 'black',
-                                border: '1px solid #aaa',
-                                padding: '6px 12px',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            save
-                        </button>
-                        <button
-                            onClick={handleCancel}
-                            style={{
-                                backgroundColor: '#f5f5f5',
-                                color: '#333',
-                                border: '1px solid #ccc',
-                                padding: '6px 12px',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            cancel
-                        </button>
+                        <button className="description-edit-action-button" onClick={(e) => {
+                            e.stopPropagation();
+                            handleSave();
+                        }}>save</button>
+                        <button className="description-edit-action-button" onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancel();
+                        }}>cancel</button>
                     </div>
                 </div>
             ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                    className="band-description-preview"
+                >
                     <p>{band.description}</p>
-                    <EditIcon onClick={() => setEditing(true)} />
+                    <EditIcon onClick={(e) => {
+                        e.stopPropagation();
+                        setEditing(true);
+                    }} />
                 </div>
             )}
         </div>

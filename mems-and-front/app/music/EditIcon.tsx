@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface EditIconProps {
-    onClick: () => void;
+    onClick?: (e: React.MouseEvent) => void
     title?: string;
 }
 
