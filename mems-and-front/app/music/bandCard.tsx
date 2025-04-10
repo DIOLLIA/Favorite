@@ -8,9 +8,12 @@ interface BandCardProps {
     name: string
     onSave: (name: string, description: string) => void;
 }
-export default function BandCard({band, name, onSave}: BandCardProps) {
+
+export default function BandCard({band, name, onSave, isExpanded, onToggleExpand}: BandCardProps & {
+    isExpanded: boolean;
+    onToggleExpand: () => void;
+}) {
     const [editing, setEditing] = useState(false);
-    const [expanded, setExpanded] = useState(false);
     const [editedDescription, setEditedDescription] = useState(band.description);
 
     const imageUrl = `http://localhost:8089${band.imagePath}`;
@@ -33,36 +36,44 @@ export default function BandCard({band, name, onSave}: BandCardProps) {
 
     return (
         <div
-            className={`band-card ${expanded ? 'expanded' : ''}`}
+            className={`band-card ${isExpanded ? 'expanded' : ''}`}
             onClick={() => {
-                if (!editing) setExpanded(prev => !prev);
+                if (!editing) {
+                    onToggleExpand();
+                }
             }}
             style={{ cursor: editing ? 'default' : 'pointer' }}
         >
-            <img src={imageUrl} alt={band.bandName}/>
-            <h3 style={{ margin: '10px' }}>{band.bandName}</h3>
+            <img src={imageUrl} alt={band.bandName} />
+            <h3>{band.bandName}</h3>
 
             {editing ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '0 10px 10px' }}>
-                    <textarea className="band-description"
-                              value={editedDescription}
-                              onChange={(e) => setEditedDescription(e.target.value)}
-                    />
+                <textarea
+                    className="band-description"
+                    value={editedDescription}
+                    onChange={(e) => setEditedDescription(e.target.value)}
+                />
                     <div style={{ display: 'flex', gap: '8px' }}>
-                        <button className="description-edit-action-button" onClick={handleSave}>save</button>
-                        <button className="description-edit-action-button" onClick={handleCancel}>cancel</button>
+                        <button className="description-edit-action-button" onClick={(e) => {
+                            e.stopPropagation();
+                            handleSave();
+                        }}>save</button>
+                        <button className="description-edit-action-button" onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancel();
+                        }}>cancel</button>
                     </div>
                 </div>
             ) : (
                 <div
                     className="band-description-preview"
-                    style={{ margin: '0 10px 10px'}}
                 >
                     <p>{band.description}</p>
                     <EditIcon onClick={(e) => {
                         e.stopPropagation();
                         setEditing(true);
-                    }}/>
+                    }} />
                 </div>
             )}
         </div>

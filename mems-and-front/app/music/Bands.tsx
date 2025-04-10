@@ -21,6 +21,7 @@ export default function BandsBar() {
     const [hasMore, setHasMore] = useState(true)
     const loader = useRef<HTMLDivElement | null>(null)
     const [isLoading, setIsLoading] = useState(false);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
     const initialPage = 0
     const pageIncrement = 4
@@ -81,13 +82,17 @@ export default function BandsBar() {
     }
 
     return (
-        <div className="bands-container">
+        <div className={`bands-container ${expandedIndex !== null ? 'blurred' : ''}`}>
             <div className="bands-bar">
                 {bands.map((band, index) => (
                     <BandCard
                         key={index}
                         band={band}
                         name={band.bandName}
+                        isExpanded={expandedIndex === index}
+                        onToggleExpand={() => {
+                            setExpandedIndex(expandedIndex === index ? null : index);
+                        }}
                         onSave={async (bandName, newDescription) => {
                             try {
                                 const response = await fetch(`/api/music/?lang=${lang}&bandName=${bandName}`, {

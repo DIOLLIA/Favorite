@@ -83,10 +83,40 @@
 
 .band-card.expanded img {
     height: auto;
-    max-height: 600px;
 }
 
 .band-card.expanded .band-description-preview {
     -webkit-line-clamp: unset;
     overflow: visible;
+}
+
+.bands-container::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.bands-container.blurred::before {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.band-card.expanded {
+    scrollbar-width: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 10;
+    background-color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
 }
