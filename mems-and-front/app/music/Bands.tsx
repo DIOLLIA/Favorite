@@ -15,6 +15,8 @@ export interface Band {
 
 export default function BandsBar() {
     const lang = useLocale().currentLocale;
+    const [localeReady, setLocaleReady] = useState(false);
+
     const [bands, setBands] = useState<Band[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState<number>(0)
@@ -50,17 +52,25 @@ export default function BandsBar() {
     };
 
     useEffect(() => {
+        if (lang) {
+            setLocaleReady(true);
+        }
+    }, [lang]);
+
+    useEffect(() => {
+        if (!localeReady) return;
         setBands([]);
         setPage(initialPage);
         setHasMore(true);
-    }, [lang]);  // useEffect on `lang` change
+    }, [lang, localeReady]);  // useEffect on `lang` change
 
     useEffect(() => {
+        if (!localeReady) return;
         fetchData(page);
-    }, [page, lang]);
+    }, [page, lang, localeReady]);
 
     useEffect(() => {
-            if (!hasMore || isLoading) return;
+            if (!localeReady || !hasMore || isLoading) return;
 
             const observer = new IntersectionObserver(
                 entries => {
@@ -74,7 +84,7 @@ export default function BandsBar() {
             return () => {
                 if (loader.current) observer.unobserve(loader.current);
             };
-        }, [hasMore, isLoading]
+        }, [localeReady, hasMore, isLoading]
     );
 
     if (error) {
@@ -108,7 +118,7 @@ export default function BandsBar() {
                                 } else {
                                     setBands(prev =>
                                         prev.map((b) =>
-                                            b.bandName === bandName ? { ...b, description: newDescription } : b
+                                            b.bandName === bandName ? {...b, description: newDescription} : b
                                         )
                                     );
                                 }

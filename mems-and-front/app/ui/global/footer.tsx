@@ -7,31 +7,6 @@ interface FooterProps {
     style?: React.CSSProperties;
 }
 
-/*
-export default function LanguageToggle() {
-    const { currentLocale, setLocale } = useLocale();
-    const isRussian = currentLocale === 'ru';
-
-    const toggleLanguage = () => {
-        setLocale(isRussian ? 'en' : 'ru');
-    };
-
-    return (
-        <div
-            onClick={toggleLanguage}
-            className="cursor-pointer relative w-20 h-8 rounded-full bg-black border border-white flex items-center justify-between px-2 text-white text-sm font-semibold select-none transition"
-        >
-            <span className={`transition-opacity duration-300 ${isRussian ? 'opacity-100' : 'opacity-0'}`}>RU</span>
-            <span className={`transition-opacity duration-300 ${!isRussian ? 'opacity-100' : 'opacity-0'}`}>EN</span>
-            <div
-                className={`absolute top-[2px] left-[2px] w-7 h-7 bg-white rounded-full transition-transform duration-300 ${
-                    isRussian ? 'translate-x-full' : 'translate-x-0'
-                }`}
-            />
-        </div>
-    );
-}*/
-
 export default function Footer({style}: FooterProps) {
     const {currentLocale, setLocale} = useLocale();
     const isRussian = currentLocale === 'ru';
