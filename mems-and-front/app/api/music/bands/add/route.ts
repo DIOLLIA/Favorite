@@ -12,7 +12,7 @@ enum Lang {
 }
 
 export async function POST(request: Request) {
-    const uploadUrl = 'http://localhost:8083/bands/create'
+    const uploadUrl = 'http://localhost:8083/bands/createWithDescription'
 
     try {
         const body = await request.json();

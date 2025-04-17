@@ -1,8 +1,6 @@
 package fleisch.lab.service
 
-import fleisch.lab.model.Band
-import fleisch.lab.model.BandDescription
-import fleisch.lab.model.BandResponse
+import fleisch.lab.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -30,6 +28,13 @@ class MusicService : KoinComponent {
     suspend fun create(band: Band) =
         bandService.create(band)
 
+    suspend fun createWithDescriptions(band: BandWithDescription): ApiResponse {
+        if (band.name == "sepultura") {
+            return ApiResponseCreated(data = mapOf(), message = "created")
+        } else {
+            return ApiResponseError(data = mapOf(), message = "error")
+        }
+    }
 
     suspend fun getAllBandsDescriptions(lang: String?): Map<String, String> =
         descriptionService.getAllBandsDescriptions(lang)
@@ -67,7 +72,7 @@ class MusicService : KoinComponent {
                 .map { (band, newDescription) -> band.copy(description = newDescription) }
                 .toSet()
 
-            BandResponse(bands , bandResponse.hasMore)
+            BandResponse(bands, bandResponse.hasMore)
         }
     }
 

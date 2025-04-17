@@ -1,10 +1,9 @@
-
-val h2_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
-val postgres_version: String by project
-val ktor_version: String by project
-
+val h2Version: String by project
+val kotlinVersion: String by project
+val logbackVersion: String by project
+val postgresVersion: String by project
+val ktorVersion: String by project
+val junitVersion: String by project
 plugins {
     kotlin("jvm") version "2.0.21"
     id("io.ktor.plugin") version "3.0.1"
@@ -26,20 +25,20 @@ repositories {
 }
 
 dependencies {
-    implementation("io.insert-koin:koin-ktor:$ktor_version")
+    implementation("io.insert-koin:koin-ktor:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.7.3")
-    implementation("io.insert-koin:koin-logger-slf4j:$ktor_version")
+    implementation("io.insert-koin:koin-logger-slf4j:$ktorVersion")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
-    implementation("org.postgresql:postgresql:$postgres_version")
+    implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("io.ktor:ktor-server-auth-jvm")
     implementation("io.ktor:ktor-server-status-pages")
     implementation("io.ktor:ktor-server-netty-jvm")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("org.flywaydb:flyway-core:9.22.3")
-    implementation ("org.liquibase:liquibase-core:4.31.1")
+    implementation("org.liquibase:liquibase-core:4.31.1")
     implementation("org.liquibase.ext:liquibase-mongodb:4.23.0")
 
     implementation("com.zaxxer:HikariCP:5.0.1")
@@ -47,8 +46,18 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
 
+
     testImplementation("io.ktor:ktor-server-test-host-jvm")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation("io.mockk:mockk:1.13.8")
+//    testImplementation("io.ktor:ktor-client-content-negotiation:3.1.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.insert-koin:koin-test:$ktorVersion")
+//    testImplementation("io.insert-koin:koin-test-junit5:$ktorVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+//    testImplementation("io.kotest:kotest-assertions-core:5.6.2")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.ktor:ktor-serialization-kotlinx-json:3.1.2")
 }
 
 tasks.withType<Copy> {

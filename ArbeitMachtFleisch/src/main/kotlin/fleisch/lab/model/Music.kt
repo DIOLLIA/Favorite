@@ -11,6 +11,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable
+data class BandWithDescription(val name: String, val imagePath: String, val description: Map<Lang, String>)
+
+@Serializable
 data class Band(val bandName: String, var description: String, val imagePath: String)
 
 @Serializable
@@ -33,7 +36,7 @@ object LangSerializer : KSerializer<Lang> {
 
     override fun deserialize(decoder: Decoder): Lang {
         val value = decoder.decodeString()
-        return Lang.values().find { it.lang == value }
+        return Lang.values().find { it.lang.equals(value, true)  }
             ?: throw SerializationException("Unknown lang: $value")
     }
 }
