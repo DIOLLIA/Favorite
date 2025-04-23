@@ -63,3 +63,7 @@ dependencies {
 tasks.withType<Copy> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+//tasks.test {
+//    useJUnitPlatform()
+//}

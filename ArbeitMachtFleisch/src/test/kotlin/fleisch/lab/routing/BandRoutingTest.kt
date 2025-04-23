@@ -1,12 +1,15 @@
 package fleisch.lab.routing
 
 import fleisch.lab.service.MusicService
+import fleisch.lab.service.Result
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.testing.*
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,15 +24,15 @@ class BandRoutingTest : KoinTest {
         const val BAND_PATH = "/bands/createWithDescription"
     }
 
-    private val testModule = module {
-        single { MusicService() }
-    }
-
     @Test
     fun `POST create band with description - deserialized & return 201`() = runBlocking {
-        startKoin {
-            modules(testModule)
+        val mockMusicService = mockk<MusicService>()
+        val testModule = module {
+            single { mockMusicService }
         }
+//        startKoin {
+//            modules(mockMusicService)
+//        }
         testApplication {
             application {
                 install(ContentNegotiation) {
@@ -40,6 +43,7 @@ class BandRoutingTest : KoinTest {
                 }
                 configureRouting()
             }
+            coEvery { mockMusicService.createWithDescriptions(any()) } returns Result.Created("sepultura", "ok")
 
             var response = client.post(BAND_PATH) {
                 contentType(ContentType.Application.Json)
@@ -49,6 +53,7 @@ class BandRoutingTest : KoinTest {
                 )
             }
             assertEquals(HttpStatusCode.Created, response.status)
+            coEvery { mockMusicService.createWithDescriptions(any()) } returns Result.Failed("sepultura", "failure")
 
             response = client.post(BAND_PATH) {
                 contentType(ContentType.Application.Json)
@@ -61,7 +66,7 @@ class BandRoutingTest : KoinTest {
         }
     }
 
-
+//todo test with bad json structure - 400 in response
     @Test
     @Disabled
     fun todoWithMock() {

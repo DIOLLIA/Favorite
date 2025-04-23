@@ -1,5 +1,6 @@
 package fleisch.lab.routing
 
+import fleisch.lab.model.ApiResponse
 import fleisch.lab.model.Band
 import fleisch.lab.model.BandDescription
 import fleisch.lab.model.BandWithDescription
@@ -38,7 +39,8 @@ fun Application.configureRouting() {
         post("/bands/createWithDescription") {
             val band = call.receive<BandWithDescription>()
             val serviceResponse = musicService.createWithDescriptions(band)
-            call.respond(HttpStatusCode.fromValue(serviceResponse.status))
+
+            call.buildResponse(serviceResponse)
         }
 
         get("/bands/descriptions") {
@@ -56,11 +58,7 @@ fun Application.configureRouting() {
             val bandDescription = call.receive<BandDescription>()
             val updated = musicService.updateBandDescription(bandDescription)
 
-            if (updated) {
-                call.respond(HttpStatusCode.OK, "Band description updated successfully")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "Band not found")
-            }
+            call.buildResponse(updated)
         }
     }
 }

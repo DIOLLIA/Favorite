@@ -11,21 +11,21 @@ sealed class ApiResponse {
 }
 
 @Serializable
-class ApiResponseCreated(
+data class ApiResponseCreated(
     override val data: Map<String, String>,
     override val message: String,
     override val status: Int = HttpStatusCode.Created.value
 ) : ApiResponse()
 
 @Serializable
-class ApiResponseError(
+data class ApiResponseError(
     override val data: Map<String, String>?,
     override val message: String,
     override val status: Int = HttpStatusCode.InternalServerError.value
 ) : ApiResponse()
 
 @Serializable
-class ApiResponseSuccess(
+data class ApiResponseSuccess(
     override val data: Map<String, String>?,
     override val message: String,
     override val status: Int = HttpStatusCode.OK.value

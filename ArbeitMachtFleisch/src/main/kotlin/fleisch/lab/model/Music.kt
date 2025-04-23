@@ -36,7 +36,15 @@ object LangSerializer : KSerializer<Lang> {
 
     override fun deserialize(decoder: Decoder): Lang {
         val value = decoder.decodeString()
-        return Lang.values().find { it.lang.equals(value, true)  }
+        return Lang.values().find { it.lang.equals(value, true) }
             ?: throw SerializationException("Unknown lang: $value")
     }
+}
+
+fun BandWithDescription.toBand(): Band {
+    return Band(bandName = this.name, description = "${this.name} default description", imagePath = this.imagePath)
+}
+
+fun BandWithDescription.toBandDescription(): BandDescription {
+    return BandDescription(name = this.name, description = this.description)
 }
