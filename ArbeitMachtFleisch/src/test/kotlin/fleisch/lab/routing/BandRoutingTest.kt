@@ -11,10 +11,9 @@ import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
-import org.koin.core.context.GlobalContext.startKoin
+import org.junit.jupiter.api.Test
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.test.KoinTest
@@ -30,9 +29,6 @@ class BandRoutingTest : KoinTest {
         val testModule = module {
             single { mockMusicService }
         }
-//        startKoin {
-//            modules(mockMusicService)
-//        }
         testApplication {
             application {
                 install(ContentNegotiation) {
@@ -66,15 +62,10 @@ class BandRoutingTest : KoinTest {
         }
     }
 
-//todo test with bad json structure - 400 in response
+    //todo test with bad json structure - 400 in response
     @Test
     @Disabled
     fun todoWithMock() {
         //todo use for mock service response\result in test
-
-//            coEvery { mockMusicService.createWithDescriptions(any()) } returns ApiResponseCreated(
-//                data = mapOf(),
-//                message = "created",
-//            )
     }
 }

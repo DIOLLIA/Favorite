@@ -65,8 +65,6 @@ class MusicService : KoinComponent {
             val descriptions = descriptionsDeferred.await()
 
             if (getBandsResult is Result.GetBands) {
-
-
                 val bands = getBandsResult.bands.associateWith { band ->
                     descriptions.getCaseInsensitive(band.bandName) ?: band.description
                 }
@@ -91,26 +89,23 @@ class MusicService : KoinComponent {
     //SAGA pattern
     private suspend fun createBand(bandWithDescription: BandWithDescription): Result = coroutineScope {
         val name = bandWithDescription.name
-        try {
-            val createdBandResult = bandService.create(bandWithDescription.toBand())
 
-            val descriptionResponse = descriptionService.addBandDescription(bandWithDescription.toBandDescription())
-            if (descriptionResponse !is Result.Created) {
-
-                return@coroutineScope deleteBand(name)
-            }
-            return@coroutineScope createdBandResult
-
-        } catch (e: Exception) {
-            log.error("Failed to create band: $name. Rolling back...", e)
-            return@coroutineScope deleteBand(name)
+        val createdBandResult = bandService.create(bandWithDescription.toBand())
+        if (createdBandResult is Result.Created) {
+            val createDescriptionResult = descriptionService.addBandDescription(bandWithDescription.toBandDescription())
+            return@coroutineScope createDescriptionResult.takeIf { it is Result.Created } ?: deleteBand(name, true)
         }
+        else return@coroutineScope Result.Failed(bandWithDescription.name, "SQL error: failed to insert band")
     }
 
-    private suspend fun deleteBand(name: String): Result {
+    suspend fun deleteBand(name: String, isRollBack: Boolean): Result {
         try {
             bandService.delete(name)
             log.info("Band $name deleted")
+            if (isRollBack) {
+                return Result.Failed(name = name, message = "failed to create band")
+            }
+            return Result.Deleted(name)
         } catch (rollbackEx: Exception) {
             log.error("Failed to rollback Postgres after Mongo failure for band: $name", rollbackEx)
         }

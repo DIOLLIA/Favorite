@@ -57,25 +57,25 @@ class DescriptionService(private val database: MongoDatabase) {
 
         log.info("Creating description for `${bandDescription.name}`")
 
-        return try {
+        try {
             val result = bandCollection
                 .insertOne(buildDocument(bandDescription))
                 .awaitFirst()
 
             if (!result.wasAcknowledged()) {
                 log.error("band description wasn't acknowledged during insert to the db ")
-                Result.Failed(
+                return Result.Failed(
                     name = bandDescription.name,
                     message = errorMsg("wasn't acknowledged")
                 )
             }
-            Result.Created(
+            return Result.Created(
                 name = bandDescription.name,
                 message = "band description successfully created"
             )
 
         } catch (exc: Exception) {
-            when {
+            return when {
                 exc is MongoWriteException && exc.code == alreadyExistsCode -> {
                     log.error(errorMsg("'${bandDescription.name}' already exists"))
                     Result.Failed(bandDescription.name, message = errorMsg("Band already exists"))

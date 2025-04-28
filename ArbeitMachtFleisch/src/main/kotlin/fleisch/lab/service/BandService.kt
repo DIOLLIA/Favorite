@@ -6,10 +6,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.sql.Connection
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Statement
+import java.sql.*
 
 @Serializable
 class BandService(private val connection: Connection) {
@@ -24,21 +21,29 @@ class BandService(private val connection: Connection) {
     }
 
     suspend fun create(band: Band): Result = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, band.bandName)
-        statement.setString(2, band.description)
-        statement.setString(3, band.imagePath)
-        statement.executeUpdate()
+        var statement: PreparedStatement?
+        var generatedKeys: ResultSet?
 
-        val generatedKeys = statement.generatedKeys
-        if (generatedKeys.next()) {
-            return@withContext Result.Created(band.bandName, "Created")
-        } else {
-            log.error("Unable to retrieve the id of the newly inserted Band")
-            return@withContext Result.Failed(
-                name = band.bandName,
-                message = "Unable to retrieve the id of the newly inserted Band"
-            )
+        try {
+            statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
+            statement.setString(1, band.bandName)
+            statement.setString(2, band.description)
+            statement.setString(3, band.imagePath)
+            statement.executeUpdate()
+            generatedKeys = statement.generatedKeys
+
+            if (generatedKeys.next()) {
+                return@withContext Result.Created(band.bandName, "Created")
+            } else {
+                log.error("Unable to retrieve the id of the newly inserted Band")
+                return@withContext Result.Failed(
+                    name = band.bandName,
+                    message = "Unable to retrieve the id of the newly inserted Band"
+                )
+            }
+        } catch (sqlException: SQLException) {
+            log.error("SQL Exception while creating band", sqlException)
+            Result.Failed(name = band.bandName, message = "SQL error: ${sqlException.message}")
         }
     }
 

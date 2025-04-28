@@ -49,14 +49,11 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("io.mockk:mockk:1.13.8")
-//    testImplementation("io.ktor:ktor-client-content-negotiation:3.1.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("io.insert-koin:koin-test:$ktorVersion")
-//    testImplementation("io.insert-koin:koin-test-junit5:$ktorVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
-//    testImplementation("io.kotest:kotest-assertions-core:5.6.2")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVersion")
     testImplementation("io.ktor:ktor-serialization-kotlinx-json:3.1.2")
 }
 
@@ -64,6 +61,6 @@ tasks.withType<Copy> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-//tasks.test {
-//    useJUnitPlatform()
-//}
+tasks.test {
+    useJUnitPlatform()
+}
