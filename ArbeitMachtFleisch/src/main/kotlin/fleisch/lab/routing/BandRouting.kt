@@ -1,7 +1,9 @@
 package fleisch.lab.routing
 
+import fleisch.lab.model.ApiResponse
 import fleisch.lab.model.Band
 import fleisch.lab.model.BandDescription
+import fleisch.lab.model.BandWithDescription
 import fleisch.lab.service.DescriptionService
 import fleisch.lab.service.MusicService
 import io.ktor.http.*
@@ -34,6 +36,12 @@ fun Application.configureRouting() {
 
             call.respond(musicService.create(band))
         }
+        post("/bands/createWithDescription") {
+            val band = call.receive<BandWithDescription>()
+            val serviceResponse = musicService.createWithDescriptions(band)
+
+            call.buildResponse(serviceResponse)
+        }
 
         get("/bands/descriptions") {
             val lang = call.request.queryParameters["lang"]
@@ -46,15 +54,11 @@ fun Application.configureRouting() {
 
             call.respond(musicService.addBandDescription(bandDescription))
         }
-        patch("/bands/description/update"){
-        val bandDescription = call.receive<BandDescription>()
-        val updated = musicService.updateBandDescription(bandDescription)
+        patch("/bands/description/update") {
+            val bandDescription = call.receive<BandDescription>()
+            val updated = musicService.updateBandDescription(bandDescription)
 
-            if (updated) {
-                call.respond(HttpStatusCode.OK, "Band description updated successfully")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "Band not found")
-            }
+            call.buildResponse(updated)
         }
     }
 }
@@ -74,3 +78,32 @@ suspend fun invokePing() {
     val mongoService: DescriptionService = getKoin().get()
     mongoService.ping()
 }
+
+/*
+ {"name":"sepultura",
+"description":{
+"EN":"eng sep mong description"}
+}
+
+* */
+
+
+/* FROM FE
+{
+  "name" : "Ария",
+  "imagePath" : "/test",
+  "description" : {
+    "EN" : "",
+    "RU" : "ыыыы"
+  }
+}
+*/
+
+/*
+TEST
+{
+    "name": "sepultura",
+    "imagePath"
+    "description": { "EN": "eng sep mong description" }
+}
+*/

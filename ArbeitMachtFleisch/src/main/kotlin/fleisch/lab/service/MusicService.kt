@@ -1,8 +1,7 @@
 package fleisch.lab.service
 
-import fleisch.lab.model.Band
-import fleisch.lab.model.BandDescription
-import fleisch.lab.model.BandResponse
+import fleisch.lab.model.*
+import fleisch.lab.service.Utils.DescriptionLanguage.validateBandWithDescription
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -30,21 +29,25 @@ class MusicService : KoinComponent {
     suspend fun create(band: Band) =
         bandService.create(band)
 
+    suspend fun createWithDescriptions(band: BandWithDescription): Result {
+        validateBandWithDescription(band)
+        return createBand(band)
+    }
 
     suspend fun getAllBandsDescriptions(lang: String?): Map<String, String> =
         descriptionService.getAllBandsDescriptions(lang)
 
 
-    suspend fun addBandDescription(description: BandDescription) =
+    suspend fun addBandDescription(description: BandDescription): Result =
         descriptionService.addBandDescription(description)
 
 
-    suspend fun updateBandDescription(description: BandDescription) =
+    suspend fun updateBandDescription(description: BandDescription): Result =
         descriptionService.updateBandDescription(description)
 
 
     //It switches the execution context of the current coroutine to another CoroutineDispatcher - in this case Dispatchers.IO.
-    suspend fun getBandsWithPagination(page: Int?): BandResponse = withContext(Dispatchers.IO) {
+    suspend fun getBandsWithPagination(page: Int?): Result = withContext(Dispatchers.IO) {
         bandService.getBands(page)
     }
 
@@ -58,16 +61,20 @@ class MusicService : KoinComponent {
                 descriptionService.getAllBandsDescriptions(lang)
             }
 
-            val bandResponse = bandsDeferred.await()
+            val getBandsResult = bandsDeferred.await()
             val descriptions = descriptionsDeferred.await()
 
-            val bands = bandResponse.bands.associateWith { band ->
-                descriptions.getCaseInsensitive(band.bandName) ?: band.description
-            }
-                .map { (band, newDescription) -> band.copy(description = newDescription) }
-                .toSet()
+            if (getBandsResult is Result.GetBands) {
+                val bands = getBandsResult.bands.associateWith { band ->
+                    descriptions.getCaseInsensitive(band.bandName) ?: band.description
+                }
+                    .map { (band, newDescription) -> band.copy(description = newDescription) }
+                    .toSet()
 
-            BandResponse(bands , bandResponse.hasMore)
+                BandResponse(bands, getBandsResult.hasMore)
+            } else {
+                throw Exception("todo")
+            }
         }
     }
 
@@ -77,5 +84,31 @@ class MusicService : KoinComponent {
             log.warn("No matching description found for band: $key")
         }
         return matchedKey?.let { this[it] }
+    }
+
+    //SAGA pattern
+    private suspend fun createBand(bandWithDescription: BandWithDescription): Result = coroutineScope {
+        val name = bandWithDescription.name
+
+        val createdBandResult = bandService.create(bandWithDescription.toBand())
+        if (createdBandResult is Result.Created) {
+            val createDescriptionResult = descriptionService.addBandDescription(bandWithDescription.toBandDescription())
+            return@coroutineScope createDescriptionResult.takeIf { it is Result.Created } ?: deleteBand(name, true)
+        }
+        else return@coroutineScope Result.Failed(bandWithDescription.name, "SQL error: failed to insert band")
+    }
+
+    suspend fun deleteBand(name: String, isRollBack: Boolean): Result {
+        try {
+            bandService.delete(name)
+            log.info("Band $name deleted")
+            if (isRollBack) {
+                return Result.Failed(name = name, message = "failed to create band")
+            }
+            return Result.Deleted(name)
+        } catch (rollbackEx: Exception) {
+            log.error("Failed to rollback Postgres after Mongo failure for band: $name", rollbackEx)
+        }
+        return Result.Failed(name = name, message = "failed to create band")
     }
 }

@@ -6,7 +6,8 @@ import com.mongodb.client.model.Projections
 import com.mongodb.client.model.Updates
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
-import fleisch.lab.model.*
+import fleisch.lab.model.BandDescription
+import fleisch.lab.model.Lang
 import fleisch.lab.service.Utils.DescriptionLanguage.validateLanguage
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
@@ -48,7 +49,7 @@ class DescriptionService(private val database: MongoDatabase) {
         }
     }
 
-    suspend fun addBandDescription(bandDescription: BandDescription): ApiResponse {
+    suspend fun addBandDescription(bandDescription: BandDescription): Result {
         val alreadyExistsCode = 11000
         val errorMsg: (String) -> String = { cause ->
             "Error during creating band description. Cause: $cause"
@@ -56,39 +57,39 @@ class DescriptionService(private val database: MongoDatabase) {
 
         log.info("Creating description for `${bandDescription.name}`")
 
-        return try {
+        try {
             val result = bandCollection
                 .insertOne(buildDocument(bandDescription))
                 .awaitFirst()
 
             if (!result.wasAcknowledged()) {
                 log.error("band description wasn't acknowledged during insert to the db ")
-                ApiResponseError(
-                    data = mapOf("band" to bandDescription.name),
+                return Result.Failed(
+                    name = bandDescription.name,
                     message = errorMsg("wasn't acknowledged")
                 )
             }
-            ApiResponseCreated(
-                data = mapOf("band" to bandDescription.name),
+            return Result.Created(
+                name = bandDescription.name,
                 message = "band description successfully created"
             )
 
         } catch (exc: Exception) {
-            when {
+            return when {
                 exc is MongoWriteException && exc.code == alreadyExistsCode -> {
                     log.error(errorMsg("'${bandDescription.name}' already exists"))
-                    ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg("Band already exists"))
+                    Result.Failed(bandDescription.name, message = errorMsg("Band already exists"))
                 }
 
                 else -> {
                     log.error(errorMsg(exc.toString()))
-                    ApiResponseError(mapOf("band" to bandDescription.name), message = errorMsg(exc.toString()))
+                    Result.Failed(bandDescription.name, message = errorMsg(exc.toString()))
                 }
             }
         }
     }
 
-    suspend fun updateBandDescription(bandDescription: BandDescription): Boolean {
+    suspend fun updateBandDescription(bandDescription: BandDescription): Result {
         log.info("updating description for band: ${bandDescription.name}")
 
         val mongoColumnsToBandDescription: Map<Lang, String> =
@@ -105,12 +106,15 @@ class DescriptionService(private val database: MongoDatabase) {
                 }
             }
 
-       val result = bandCollection.updateOne(
+        val result = bandCollection.updateOne(
             Filters.eq("band_name", bandDescription.name.lowercase()),
             Updates.combine(updates)
         ).awaitFirst()
-
-        return result.modifiedCount == 1L
+        return if (result.modifiedCount == 1L) {
+            Result.Updated(name = bandDescription.name, message = "successfully updated")
+        } else {
+            Result.Failed(name = bandDescription.name, message = "can not update")
+        }
     }
 }
 

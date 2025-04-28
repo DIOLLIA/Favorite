@@ -1,35 +1,49 @@
 package fleisch.lab.service
 
 import fleisch.lab.model.Band
-import fleisch.lab.model.BandResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
-import java.sql.Connection
-import java.sql.Statement
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.sql.*
 
 @Serializable
 class BandService(private val connection: Connection) {
+    private val log: Logger = LoggerFactory.getLogger(javaClass)
+
     companion object {
         private const val SELECT_BANDS = "SELECT * FROM bands LIMIT ? OFFSET ?"
         private const val SELECT_BAND_BY_ID = "SELECT * FROM bands WHERE band_name = ?"
         private const val INSERT_BAND = "INSERT INTO bands (band_name, description, image_path) VALUES (?, ?, ?)"
         private const val UPDATE_BAND = "UPDATE bands SET band_name = ?, description = ?, image_path = ? WHERE id = ?"
-        private const val DELETE_BAND = "DELETE FROM bands WHERE id = ?"
+        private const val DELETE_BAND = "DELETE FROM bands WHERE band_name = ?"
     }
 
-    suspend fun create(band: Band): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, band.bandName)
-        statement.setString(2, band.description)
-        statement.setString(3, band.imagePath)
-        statement.executeUpdate()
+    suspend fun create(band: Band): Result = withContext(Dispatchers.IO) {
+        var statement: PreparedStatement?
+        var generatedKeys: ResultSet?
 
-        val generatedKeys = statement.generatedKeys
-        if (generatedKeys.next()) {
-            return@withContext generatedKeys.getInt(1)
-        } else {
-            throw Exception("Unable to retrieve the id of the newly inserted Band")
+        try {
+            statement = connection.prepareStatement(INSERT_BAND, Statement.RETURN_GENERATED_KEYS)
+            statement.setString(1, band.bandName)
+            statement.setString(2, band.description)
+            statement.setString(3, band.imagePath)
+            statement.executeUpdate()
+            generatedKeys = statement.generatedKeys
+
+            if (generatedKeys.next()) {
+                return@withContext Result.Created(band.bandName, "Created")
+            } else {
+                log.error("Unable to retrieve the id of the newly inserted Band")
+                return@withContext Result.Failed(
+                    name = band.bandName,
+                    message = "Unable to retrieve the id of the newly inserted Band"
+                )
+            }
+        } catch (sqlException: SQLException) {
+            log.error("SQL Exception while creating band", sqlException)
+            Result.Failed(name = band.bandName, message = "SQL error: ${sqlException.message}")
         }
     }
 
@@ -48,13 +62,18 @@ class BandService(private val connection: Connection) {
             }
         }*/
 
-    suspend fun getBands(page: Int?): BandResponse = withContext(Dispatchers.IO) {
+    suspend fun getBands(page: Int?): Result = withContext(Dispatchers.IO) {
         val limit = 4
         val actualPage = page ?: 0
         val statement = connection.prepareStatement(SELECT_BANDS)
         statement.setInt(2, actualPage)
         statement.setInt(1, limit)
-        val resultSet = statement.executeQuery()
+        var resultSet: ResultSet
+        try {
+            resultSet = statement.executeQuery()
+        } catch (sqlException: SQLException) {
+            return@withContext Result.Failed("", sqlException.message!!)
+        }
 
         val bands = mutableSetOf<Band>()
         while (resultSet.next()) {
@@ -67,9 +86,9 @@ class BandService(private val connection: Connection) {
             )
         }
         if (bands.isEmpty()) {
-            return@withContext BandResponse(emptySet<Band>(), false)
+            return@withContext Result.GetBands(emptySet(), "success", false)
         }
-        return@withContext BandResponse(bands, (bands.size == limit))
+        return@withContext Result.GetBands(bands, "success", true)
     }
 
     // Update a Band
@@ -83,11 +102,17 @@ class BandService(private val connection: Connection) {
         }
     */
 
-    // Delete a Band
-    /*    suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-            val statement = connection.prepareStatement(DELETE_Band)
-            statement.setInt(1, id)
+    suspend fun delete(name: String) = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(DELETE_BAND)
+        statement.setString(1, name)
+        try {
             statement.executeUpdate()
-        }*/
+
+        } catch (e: SQLException) {
+            log.error("Failed to delete Band: $name", e)
+            return@withContext Result.Failed(name, e.localizedMessage!!)
+        }
+        return@withContext Result.Deleted(name)
+    }
 }
 
