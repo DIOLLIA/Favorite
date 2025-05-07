@@ -7,8 +7,6 @@
   * Springdoc OpenAPI
   * MAYBE:
     * Spring Data REST
-    * jooq (but now JPA is used)
-    * vaadin (I have a FE on NextJS)
     * login with IDP Github
 
 

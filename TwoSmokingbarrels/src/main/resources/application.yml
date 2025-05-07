@@ -9,6 +9,8 @@ server:
 app:
   movies:
     imageBaseUrl: "http://localhost:8089"
+  grpc:
+    port: 8085
 
 logging:
   level:
@@ -34,3 +36,4 @@ spring:
 
   messages:
     basename: "lang/messages"
+
