@@ -13,15 +13,16 @@ use docker-compose -f mems-and-front/lib/db-docker-compose.yml up to launch mong
 
 
 ### Look at each project readme to see the important data about it.
-[FE mems and books](mems-and-front/README.md)
+[FE mems and books](mems-and-front/README.md) :3000
 
-[BE Games](Nameless/README.md)
+[BE Games](Nameless/README.md) :8082
 
-[BE Movies and more](TwoSmokingbarrels/README.md)
+[BE Movies and more](TwoSmokingbarrels/README.md) :8081 
+* OST gRPC service :8085
 
-[BE Music](ArbeitMachtFleisch/README.md)
+[BE Music](ArbeitMachtFleisch/README.md) :8083
 
-[BE Image Server](ImageServer/README.md) 
+[BE Image Server](ImageServer/README.md) :8089
 
 ### [FE] Mems&Books Stack and features
 * React
@@ -51,6 +52,7 @@ use docker-compose -f mems-and-front/lib/db-docker-compose.yml up to launch mong
 * REST API
 * Spring
 * PostgreSQL
+* gRPC service
 * features:
   * FlyWay for migration
   * [Spring JPA](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
