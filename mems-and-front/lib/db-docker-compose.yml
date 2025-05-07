@@ -15,9 +15,11 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+#      - mongo_data:/data/db #after switch to the bind mount we change this
+      - ../mongo_db:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
-volumes:
-  mongo_data:
-    driver: local
+#after switch to the bind mount we don't use volumes
+#volumes:
+#  mongo_data:
+#    driver: local

@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
+    providers:[],
     pages: {
         signIn: '/login',
     },
@@ -8,14 +9,28 @@ export const authConfig = {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
             const isOnUpload = nextUrl.pathname.startsWith('/mems/upload');
+
             if (isOnUpload) {
-                if (isLoggedIn) return true;
-                return false; // Redirect unauthenticated users to login page
-            } else if (isLoggedIn) {
-                return Response.redirect(new URL('/mems/upload', nextUrl));
+                return isLoggedIn;
             }
+
             return true;
         },
+        // async jwt({ token, user }) {
+        //     if (user) {
+        //         token.id = user.id;
+        //     }
+        //     return token;
+        // },
+        // async session({ session, token }) {
+        //     if (session.user) {
+        //         session.user.id = token.id as string;
+        //     }
+        //     return session;
+        // }
+    // },
+    // session: {
+    //     strategy: "jwt",
     },
-    providers: [],
-} satisfies NextAuthConfig;
+    secret: process.env.AUTH_SECRET,
+};

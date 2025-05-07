@@ -1,5 +1,5 @@
-import NextAuth from 'next-auth';
-import {authConfig} from "@/app/api/auth/auth.config";
+import { handlers } from "@/app/api/auth/auth";
+import { authConfig } from "@/app/api/auth/auth.config";
 
-const handler = NextAuth(authConfig);
-export { handler as GET, handler as POST };
+export const { GET, POST } = handlers;
+export const runtime = 'edge'; // Опционально для Vercel

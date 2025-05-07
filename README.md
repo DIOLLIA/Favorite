@@ -3,6 +3,14 @@
 ###  Diagram of communications
 ![Stack_diagram.png](Stack_diagram.png)
 
+### Run dbs locally
+use docker-compose -f mems-and-front/lib/db-docker-compose.yml up to launch mongo db
+
+#### how to find volumes locally
+`docker volume ls` - show list of volumes
+`docker volume inspect <volume_name>` - detailed data about vol
+`docker cp <container_id>:<mongo_data_value> ./<new_folder>` - copy data to the local storage
+
 
 ### Look at each project readme to see the important data about it.
 [FE mems and books](mems-and-front/README.md)
