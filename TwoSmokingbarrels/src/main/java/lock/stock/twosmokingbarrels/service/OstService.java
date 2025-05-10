@@ -18,7 +18,7 @@ public class OstService extends OstServiceGrpc.OstServiceImplBase {
     @Override
     public void moviesAndTrackByBand(BandRequest request, StreamObserver<MovieTracks> responseObserver) {
         var data = ostRepo.findMoviesByBandName(request.getBandName());
-        responseObserver.onNext(data);
+        responseObserver.onNext(data);//todo add logs about data
         responseObserver.onCompleted();
     }
 }
