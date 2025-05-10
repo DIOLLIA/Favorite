@@ -1,6 +1,5 @@
 package fleisch.lab.config
 
-
 import io.ktor.server.application.*
 import org.flywaydb.core.Flyway
 import org.koin.dsl.module
@@ -23,10 +22,8 @@ fun connectToPostgres(dbConfig: DbConfig): Connection {
     return DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
 }
 
-//read config from the props
 
-
-val flywayModule = module { // single initialize by request, to invoke it we use flyway.migrate()
+val flywayModule = module { // single initialize by request, to invoke it - flyway.migrate() is used
     single {
         val config = get<DbConfig>()
         val flyway = Flyway.configure()

@@ -10,17 +10,17 @@ import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
-
-fun Application.configureDbs() {
+fun Application.configureDI() {
     install(Koin) {
         slf4jLogger()
         modules(
-            module { single { this@configureDbs } }, // to receive this on other components
+            module { single { this@configureDI } }, // to receive `this` on other components
             musicModule,
             postgresDbModule(postgresConfig()),
-            flywayModule,
             bandConnectionModule,
-            descriptionModule(this@configureDbs),
+            descriptionModule(this@configureDI),
+            flywayModule,
+            grpcModule
         )
     }
     runMigrations()

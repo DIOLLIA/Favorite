@@ -57,3 +57,4 @@ are performed using runCommand, which allows to execute arbitrary MongoDB comman
                 ]
               }
 
+To create the `music' database, find the SQL script in the root of the project.
