@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package ost;
+
+option java_multiple_files = true;
+option java_package = "fleisch.lab.ost";
+option java_outer_classname = "OstProto";
+
+
+service OstService {
+  rpc MoviesAndTrackByBand (BandRequest) returns (MovieTracks);
+}
+
+message BandRequest {
+  string band_name = 1;
+}
+
+message MovieTrack {
+  string movie_title = 1;
+  string track = 2;
+}
+
+message MovieTracks {
+  repeated MovieTrack movie_tracks= 1;
+}

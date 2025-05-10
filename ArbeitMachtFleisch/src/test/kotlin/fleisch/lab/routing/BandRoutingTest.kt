@@ -1,5 +1,6 @@
 package fleisch.lab.routing
 
+import fleisch.lab.proto.OstService
 import fleisch.lab.service.MusicService
 import fleisch.lab.service.Result
 import io.ktor.client.request.*
@@ -26,8 +27,10 @@ class BandRoutingTest : KoinTest {
     @Test
     fun `POST create band with description - deserialized & return 201`() = runBlocking {
         val mockMusicService = mockk<MusicService>()
+        val mockOstService = mockk<OstService>()
         val testModule = module {
             single { mockMusicService }
+            single { mockOstService }
         }
         testApplication {
             application {
@@ -37,7 +40,7 @@ class BandRoutingTest : KoinTest {
                 install(Koin) {
                     modules(testModule)
                 }
-                configureRouting()
+                configureRouting(mockMusicService, mockOstService)
             }
             coEvery { mockMusicService.createWithDescriptions(any()) } returns Result.Created("sepultura", "ok")
 

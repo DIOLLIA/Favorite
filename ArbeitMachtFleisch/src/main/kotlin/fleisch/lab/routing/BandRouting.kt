@@ -1,21 +1,21 @@
 package fleisch.lab.routing
 
-import fleisch.lab.model.ApiResponse
 import fleisch.lab.model.Band
 import fleisch.lab.model.BandDescription
 import fleisch.lab.model.BandWithDescription
+import fleisch.lab.proto.OstService
 import fleisch.lab.service.DescriptionService
 import fleisch.lab.service.MusicService
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.java.KoinJavaComponent.getKoin
-import org.koin.ktor.ext.inject
 
-fun Application.configureRouting() {
-    val musicService: MusicService by inject()
+fun Application.configureRouting(
+    musicService: MusicService,
+    grpcClient: OstService
+) {
 
     routing {
         get("/") {
@@ -61,6 +61,9 @@ fun Application.configureRouting() {
             call.buildResponse(updated)
         }
     }
+    routing {
+        ostRoute(grpcClient)
+    }
 }
 
 /*
@@ -78,32 +81,3 @@ suspend fun invokePing() {
     val mongoService: DescriptionService = getKoin().get()
     mongoService.ping()
 }
-
-/*
- {"name":"sepultura",
-"description":{
-"EN":"eng sep mong description"}
-}
-
-* */
-
-
-/* FROM FE
-{
-  "name" : "Ария",
-  "imagePath" : "/test",
-  "description" : {
-    "EN" : "",
-    "RU" : "ыыыы"
-  }
-}
-*/
-
-/*
-TEST
-{
-    "name": "sepultura",
-    "imagePath"
-    "description": { "EN": "eng sep mong description" }
-}
-*/
