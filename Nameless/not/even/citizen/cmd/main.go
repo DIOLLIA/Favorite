@@ -9,7 +9,8 @@ import (
 
 func main() {
 
-	cfg := config.LoadConfig()
+	config.LoadAppEnvVars()
+	cfg := config.LoadDbConfig()
 	dbPool := database.NewDbConnect(cfg)
 	rout := router.SetupRouter(dbPool)
 

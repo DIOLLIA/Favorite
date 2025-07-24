@@ -1,6 +1,11 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+	"log/slog"
+	"os"
+	"strconv"
+)
 
 type DBConfig struct {
 	IsMocked bool
@@ -10,14 +15,20 @@ type DBConfig struct {
 	Password string
 }
 
-func LoadConfig() DBConfig {
-	isMocked := false // todo from cfg file 2) handle crash on db connect error
-	host := "localhost"
-	port := "5432"
-	username := "fstck_user"
-	pwd := "fstck_secret"
-	dbName := "games"
-	//return DBConfig{Url: os.Getenv("DB_URL"), Port: os.Getenv("DB_PORT")}
+func LoadDbConfig() DBConfig {
+	isMocked, err := strconv.ParseBool(os.Getenv("IS_DB_MOCKED")) // 2) handle crash on db connect error
+	if err != nil {
+		slog.Error("can not parse `IS_DB_MOCKED` env var. Reason: %s \n", err.Error())
+		slog.Info("Try to connect to the DB")
+	}
+	if isMocked {
+		return DBConfig{IsMocked: isMocked}
+	}
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	username := os.Getenv("DB_USER")
+	pwd := os.Getenv("DB_PWD")
+	dbName := os.Getenv("DB_NAME")
 	url := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", username, pwd, host, port, dbName)
-	return DBConfig{IsMocked: isMocked, Url: url}
+	return DBConfig{Url: url}
 }

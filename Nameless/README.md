@@ -1,98 +1,55 @@
 ## Games (TBD)
 
 This is the project in Go that will use also:
+postgresql with pgx
+mocked responses for test
 
 MongoDB
-REST \ gRPC \GpaphQL ?
+REST \GpaphQL ?
 
 
-1. Что в Go соответствует Hibernate/JPA + SQL?
-   Go традиционно использует database/sql как базовый стандарт для работы с базами данных, а поверх него можно использовать:
+1. What in Go is equivalent to Hibernate/JPA + SQL?
+   Go traditionally uses database/sql as the base standard for database interaction. On top of that, you can use tools that improve type safety and code maintainability.
 
-🔹 A) gorm — самый популярный ORM (аналог Hibernate)
-Поддерживает миграции, ассоциации, preload, CRUD и т.д.
+🔹 B) sqlc — A modern way to generate Go code from SQL
+You write raw SQL manually, and sqlc generates type-safe Go code (models + methods).
 
-Очень популярен, особенно для PostgreSQL, MySQL, SQLite и др.
-
-Пример:
-
-import (
-"gorm.io/driver/postgres"
-"gorm.io/gorm"
-)
-
-type User struct {
-ID    uint   `gorm:"primaryKey"`
-Name  string
-Email string
-Orders []Order // связь один-ко-многим
-}
-
-type Order struct {
-ID     uint
-UserID uint
-Item   string
-}
-
-func main() {
-dsn := "host=localhost user=postgres password=123 dbname=test port=5432 sslmode=disable"
-db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-    db.AutoMigrate(&User{}, &Order{})
-
-    db.Create(&User{Name: "Alice", Email: "alice@example.com"})
-}
-Ассоциации:
-GORM поддерживает связи: has one, has many, belongs to, many2many, preload.
-
-🔹 B) sqlc — современный способ генерации Go-кода по SQL-запросам
-Ты пишешь SQL сам → sqlc генерирует type-safe Go-код (модели + методы).
-
-Нет скрытой магии, высокое качество кода.
 
 -- file: queries.sql
 -- name: GetUser :one
 SELECT id, name, email FROM users WHERE id = $1;
+After generation:
 
-После генерации ты получаешь в Go:
+`user, err := q.GetUser(ctx, 123)
+fmt.Println(user.Email)`
 
-user, err := q.GetUser(ctx, 123)
-fmt.Println(user.Email)
-Плюсы:
+Benefits:
 
-Явный контроль
+*Full control over SQL
+*High performance
+*Readable in large teams
+*Compatible with any SQL engine
+*No hidden magic (compared to traditional ORMs)
 
-Высокая производительность
+C) pgx — Advanced PostgreSQL driver
+* Faster than database/sql
+* Fully compatible with pgconn, pgxpool
 
-Лучше читается в больших командах
 
-Совместим с любым SQL-движком
-
-🔹 C) pgx — продвинутый PostgreSQL-драйвер
-Быстрее, чем database/sql
-
-Полностью совместим с pgconn, pgxpool
-
-Используется в high-load Go-проектах
-
+```
 import "github.com/jackc/pgx/v5/pgxpool"
 
 pool, _ := pgxpool.New(context.Background(), "postgres://...")
 row := pool.QueryRow(context.Background(), "SELECT name FROM users WHERE id=$1", 1)
 
 var name string
-row.Scan(&name)
-🚀 2. Современный подход в Go: sqlc + pgx
-В крупных продакшн-проектах сейчас часто используют sqlc + pgx:
+row.Scan(&name) 
+```
 
-sqlc — для генерации безопасного, читабельного кода
+In modern large-scale Go projects, a common stack is:
+sqlc for generating readable, type-safe code pgx as the PostgreSQL driver
 
-pgx — как драйвер к PostgreSQL
-
-Это даёт баланс:
-
-Безопасность типов
-
-Простота в отладке (SQL — виден и ясен)
-
-Нет overhead как у "тяжёлых" ORM
+This combination gives a great balance:
+* Type safety
+* Easy debugging (raw SQL is visible and understandable)
+* No performance overhead of heavy ORMs

@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
+	"log/slog"
 	"not/even/citizen/games"
 	"not/even/citizen/internal/config"
 )
@@ -17,16 +18,27 @@ type DBPool struct {
 	service GameService
 }
 
+func newMockDb() *DBPool {
+	return &DBPool{
+		service: &MockDBService{},
+	}
+}
 func NewDbConnect(config config.DBConfig) *DBPool {
 	if config.IsMocked {
-		return &DBPool{
-			service: &MockDBService{},
-		}
+		slog.Info("mocked connection instead of db from configuration")
+		return newMockDb()
 	}
 
-	connPool, err := pgxpool.New(context.Background(), config.Url)
-	if err != nil {
-		log.Fatal(err)
+	connPool, cpErr := pgxpool.New(context.Background(), config.Url)
+	if cpErr != nil {
+		slog.Error("failed to connect to the db. Reason: ", cpErr)
+		return newMockDb()
+	}
+	dbConErr := connPool.Ping(context.Background())
+	if dbConErr != nil {
+		slog.Error("failed to connect to the db. Reason: ", dbConErr)
+		slog.Warn("connect to the mock instead of DB")
+		return newMockDb()
 	}
 	return &DBPool{service: &DBService{connPool}}
 }
