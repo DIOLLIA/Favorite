@@ -10,9 +10,8 @@ import (
 func main() {
 
 	cfg := config.LoadConfig()
-	dbconf := database.NewDbConnect(cfg)
-
-	rout := router.SetupRouter(dbconf)
+	dbPool := database.NewDbConnect(cfg)
+	rout := router.SetupRouter(dbPool)
 
 	log.Fatal(rout.Run("localhost:8082"))
 
