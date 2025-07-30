@@ -1,0 +1,19 @@
+package main
+
+import (
+	"log"
+	"not/even/citizen/internal/config"
+	"not/even/citizen/internal/database"
+	"not/even/citizen/internal/router"
+)
+
+func main() {
+
+	config.LoadAppEnvVars()
+	cfg := config.LoadDbConfig()
+	dbPool := database.NewDbConnect(cfg)
+	rout := router.SetupRouter(dbPool)
+
+	log.Fatal(rout.Run("localhost:8082"))
+
+}

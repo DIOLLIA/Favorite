@@ -13,6 +13,11 @@ use docker-compose -f mems-and-front/lib/db-docker-compose.yml up to launch mong
 
 
 ### Look at each project readme to see the important data about it.
+
+To run all projects you can:
+
+1) run them separately
+
 [FE mems and books](mems-and-front/README.md) :3000
 
 [BE Games](Nameless/README.md) :8082
@@ -23,6 +28,9 @@ use docker-compose -f mems-and-front/lib/db-docker-compose.yml up to launch mong
 [BE Music](ArbeitMachtFleisch/README.md) :8083
 
 [BE Image Server](ImageServer/README.md) :8089
+
+2) Launch from ps file start-all.ps1 - that will open each project in separate terminal window 
+3) Launch appStart.sh file from bash. That will launch each project in one terminal, in background
 
 ### [FE] Mems&Books Stack and features
 * React
