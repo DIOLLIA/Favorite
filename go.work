@@ -1,0 +1,3 @@
+go 1.23.0
+// to run from bash and parent dir where is no go.mod
+use ./Nameless/not/even/citizen
